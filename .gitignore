@@ -1,0 +1,10 @@
+vendor/
+bin/
+html/
+.idea/
+public/images/
+
+composer.lock
+
+config.test.php
+config.local.php
