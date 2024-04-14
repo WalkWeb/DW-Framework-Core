@@ -1,6 +1,6 @@
 {
   "name": "walkweb/dw-framework-core",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "minimum-stability": "stable",
   "type": "library",
   "description": "Core Micro MVC Framework",
