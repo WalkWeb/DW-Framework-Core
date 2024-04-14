@@ -1,6 +1,7 @@
 {
   "name": "walkweb/dw-framework-core",
-  "version": "1.0.7",
+  "version": "1.0.8",
+  "license": "MIT",
   "minimum-stability": "stable",
   "type": "library",
   "description": "Core Micro MVC Framework",
