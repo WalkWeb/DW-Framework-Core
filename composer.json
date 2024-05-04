@@ -29,7 +29,7 @@
   },
   "autoload": {
     "psr-4": {
-      "WalkWeb\\DW-Framework-Core\\": "src/"
+      "WalkWeb\\NW\\": "src/"
     }
   },
   "scripts": {
