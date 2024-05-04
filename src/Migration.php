@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace NW;
+namespace WalkWeb\NW;
 
 use DateTime;
 use Exception;
-use NW\MySQL\Connection;
-use NW\Route\RouteCollection;
-use NW\Route\Router;
+use WalkWeb\NW\MySQL\Connection;
+use WalkWeb\NW\Route\RouteCollection;
+use WalkWeb\NW\Route\Router;
 
 class Migration
 {
@@ -44,7 +44,7 @@ declare(strict_types=1);
 
 namespace Migrations;
 
-use NW\MySQL\Connection;
+use WalkWeb\NW\MySQL\Connection;
 
 class ' . $className . '
 {

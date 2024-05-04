@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
-use NW\Cookie;
+use WalkWeb\NW\Cookie;
 use Tests\AbstractTest;
 
 class CookieTest extends AbstractTest

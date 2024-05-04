@@ -1,6 +1,6 @@
 <?php
 
-namespace NW\Loader;
+namespace WalkWeb\NW\Loader;
 
 class File
 {

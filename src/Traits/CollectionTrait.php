@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NW\Traits;
+namespace WalkWeb\NW\Traits;
 
 trait CollectionTrait
 {

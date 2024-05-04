@@ -1,9 +1,9 @@
 <?php
 
-namespace NW;
+namespace WalkWeb\NW;
 
 use Exception;
-use NW\Route\Router;
+use WalkWeb\NW\Route\Router;
 
 class App
 {

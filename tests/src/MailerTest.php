@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
-use NW\AppException;
-use NW\Mailer;
+use WalkWeb\NW\AppException;
+use WalkWeb\NW\Mailer;
 use Tests\AbstractTest;
 
 class MailerTest extends AbstractTest

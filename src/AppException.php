@@ -1,6 +1,6 @@
 <?php
 
-namespace NW;
+namespace WalkWeb\NW;
 
 use Exception;
 use Throwable;
@@ -8,7 +8,7 @@ use Throwable;
 /**
  * Для минимизации количества подгружаемых файлов делается один класс исключений на все ошибки уровня фреймворка
  *
- * @package NW
+ * @package WalkWeb\NW
  */
 class AppException extends Exception
 {

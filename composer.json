@@ -1,6 +1,6 @@
 {
   "name": "walkweb/dw-framework-core",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "license": "MIT",
   "minimum-stability": "stable",
   "type": "library",
@@ -30,6 +30,11 @@
   "autoload": {
     "psr-4": {
       "WalkWeb\\NW\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
     }
   },
   "scripts": {

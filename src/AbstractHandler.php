@@ -1,6 +1,6 @@
 <?php
 
-namespace NW;
+namespace WalkWeb\NW;
 
 use Exception;
 

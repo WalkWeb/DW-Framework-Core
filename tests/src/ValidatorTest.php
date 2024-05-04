@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
 use Exception;
-use NW\AppException;
+use WalkWeb\NW\AppException;
 use Tests\AbstractTest;
 
 class ValidatorTest extends AbstractTest

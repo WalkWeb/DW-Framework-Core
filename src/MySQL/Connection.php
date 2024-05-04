@@ -1,11 +1,11 @@
 <?php
 
-namespace NW\MySQL;
+namespace WalkWeb\NW\MySQL;
 
 use mysqli;
-use NW\AppException;
-use NW\Container;
-use NW\Logger;
+use WalkWeb\NW\AppException;
+use WalkWeb\NW\Container;
+use WalkWeb\NW\Logger;
 use Throwable;
 
 final class Connection

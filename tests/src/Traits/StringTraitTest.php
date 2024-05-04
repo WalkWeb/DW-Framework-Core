@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework\Traits;
+namespace Tests\src\WalkWeb\NWFramework\Traits;
 
 use Exception;
 use Tests\AbstractTest;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework\Loader;
+namespace Tests\src\WalkWeb\NWFramework\Loader;
 
-use NW\Loader\File;
+use WalkWeb\NW\Loader\File;
 use Tests\AbstractTest;
 
 class FileTest extends AbstractTest

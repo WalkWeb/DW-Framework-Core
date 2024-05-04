@@ -1,10 +1,10 @@
 <?php
 
-namespace NW\Route;
+namespace WalkWeb\NW\Route;
 
 use Countable;
 use Iterator;
-use NW\Traits\CollectionTrait;
+use WalkWeb\NW\Traits\CollectionTrait;
 
 // TODO Добавить объединение коллекций - таким образом можно будет делать коллекции под разные группы методов
 

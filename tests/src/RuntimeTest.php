@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
-use NW\Runtime;
+use WalkWeb\NW\Runtime;
 use Tests\AbstractTest;
 
 class RuntimeTest extends AbstractTest

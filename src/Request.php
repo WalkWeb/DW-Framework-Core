@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NW;
+namespace WalkWeb\NW;
 
 class Request
 {

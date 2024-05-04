@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
-use NW\AppException;
-use NW\Captcha;
-use NW\Container;
-use NW\Cookie;
-use NW\Csrf;
-use NW\Logger;
-use NW\Mailer;
-use NW\Request;
-use NW\Runtime;
+use WalkWeb\NW\AppException;
+use WalkWeb\NW\Captcha;
+use WalkWeb\NW\Container;
+use WalkWeb\NW\Cookie;
+use WalkWeb\NW\Csrf;
+use WalkWeb\NW\Logger;
+use WalkWeb\NW\Mailer;
+use WalkWeb\NW\Request;
+use WalkWeb\NW\Runtime;
 use Tests\AbstractTest;
 use Tests\utils\ExampleUser;
 

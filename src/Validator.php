@@ -1,6 +1,6 @@
 <?php
 
-namespace NW;
+namespace WalkWeb\NW;
 
 // TODO Заменить все ошибки на английский
 

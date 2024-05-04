@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework\Traits;
+namespace Tests\src\WalkWeb\NWFramework\Traits;
 
-use NW\Traits\PaginationTrait;
+use WalkWeb\NW\Traits\PaginationTrait;
 use Tests\AbstractTest;
 
 class PaginationTraitTest extends AbstractTest

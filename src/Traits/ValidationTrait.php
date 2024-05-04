@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace NW\Traits;
+namespace WalkWeb\NW\Traits;
 
 use DateTime;
 use DateTimeInterface;
 use Exception;
-use NW\AppException;
+use WalkWeb\NW\AppException;
 use Ramsey\Uuid\Uuid;
 
 trait ValidationTrait

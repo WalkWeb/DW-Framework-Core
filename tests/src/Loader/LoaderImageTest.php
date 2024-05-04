@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework\Loader;
+namespace Tests\src\WalkWeb\NWFramework\Loader;
 
 use DateTime;
 use Exception;
-use NW\AppException;
-use NW\Loader\Image;
-use NW\Loader\LoaderException;
-use NW\Loader\LoaderImage;
+use WalkWeb\NW\AppException;
+use WalkWeb\NW\Loader\Image;
+use WalkWeb\NW\Loader\LoaderException;
+use WalkWeb\NW\Loader\LoaderImage;
 use RuntimeException;
 use Tests\AbstractTest;
 

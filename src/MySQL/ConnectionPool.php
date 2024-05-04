@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace NW\MySQL;
+namespace WalkWeb\NW\MySQL;
 
-use NW\AppException;
-use NW\Container;
+use WalkWeb\NW\AppException;
+use WalkWeb\NW\Container;
 
 /**
  * ConnectionPool создан для того, чтобы можно было работать сразу с несколькими разными базами MySQL
  *
- * @package NW
+ * @package WalkWeb\NW
  */
 class ConnectionPool
 {

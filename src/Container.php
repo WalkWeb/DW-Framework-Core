@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace NW;
+namespace WalkWeb\NW;
 
-use NW\MySQL\ConnectionPool;
+use WalkWeb\NW\MySQL\ConnectionPool;
 
 class Container
 {

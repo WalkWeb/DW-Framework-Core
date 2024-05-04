@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
-use NW\AppException;
-use NW\Response;
+use WalkWeb\NW\AppException;
+use WalkWeb\NW\Response;
 use Tests\AbstractTest;
 
 class ResponseTest extends AbstractTest

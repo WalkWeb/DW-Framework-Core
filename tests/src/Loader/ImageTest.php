@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework\Loader;
+namespace Tests\src\WalkWeb\NWFramework\Loader;
 
-use NW\Loader\Image;
+use WalkWeb\NW\Loader\Image;
 use Tests\AbstractTest;
 
 class ImageTest extends AbstractTest

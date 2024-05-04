@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
-use NW\AppException;
-use NW\Container;
-use NW\Response;
-use NW\Route\RouteCollection;
-use NW\Route\Router;
+use WalkWeb\NW\AppException;
+use WalkWeb\NW\Container;
+use WalkWeb\NW\Response;
+use WalkWeb\NW\Route\RouteCollection;
+use WalkWeb\NW\Route\Router;
 use Tests\AbstractTest;
 
 class AppExceptionTest extends AbstractTest

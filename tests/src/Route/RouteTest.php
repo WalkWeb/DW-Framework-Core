@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework\Route;
+namespace Tests\src\WalkWeb\NWFramework\Route;
 
-use NW\Request;
-use NW\Route\Route;
+use WalkWeb\NW\Request;
+use WalkWeb\NW\Route\Route;
 use Tests\AbstractTest;
 
 class RouteTest extends AbstractTest

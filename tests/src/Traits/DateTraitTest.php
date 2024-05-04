@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework\Traits;
+namespace Tests\src\WalkWeb\NWFramework\Traits;
 
 use DateTime;
-use NW\Traits\DateTrait;
+use WalkWeb\NW\Traits\DateTrait;
 use Tests\AbstractTest;
 
 class DateTraitTest extends AbstractTest

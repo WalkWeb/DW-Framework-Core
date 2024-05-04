@@ -1,11 +1,11 @@
 <?php
 
-namespace NW\Loader;
+namespace WalkWeb\NW\Loader;
 
 use DateTime;
 use Exception;
-use NW\Container;
-use NW\Traits\StringTrait;
+use WalkWeb\NW\Container;
+use WalkWeb\NW\Traits\StringTrait;
 use RuntimeException;
 
 class LoaderImage

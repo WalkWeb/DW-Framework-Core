@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NW\Loader;
+namespace WalkWeb\NW\Loader;
 
 use Exception;
 

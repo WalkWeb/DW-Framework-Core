@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
 use Exception;
-use NW\AppException;
-use NW\Captcha;
-use NW\Container;
+use WalkWeb\NW\AppException;
+use WalkWeb\NW\Captcha;
+use WalkWeb\NW\Container;
 use Tests\AbstractTest;
 
 class CaptchaTest extends AbstractTest

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
-use NW\Session;
+use WalkWeb\NW\Session;
 use Tests\AbstractTest;
 
 class SessionTest extends AbstractTest

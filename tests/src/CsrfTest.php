@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
-use NW\Csrf;
-use NW\Session;
+use WalkWeb\NW\Csrf;
+use WalkWeb\NW\Session;
 use Tests\AbstractTest;
 
 class CsrfTest extends AbstractTest

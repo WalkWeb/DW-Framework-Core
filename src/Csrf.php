@@ -1,9 +1,9 @@
 <?php
 
-namespace NW;
+namespace WalkWeb\NW;
 
 use Exception;
-use NW\Traits\StringTrait;
+use WalkWeb\NW\Traits\StringTrait;
 
 class Csrf
 {

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
-use NW\App;
-use NW\AppException;
-use NW\Request;
-use NW\Response;
-use NW\Route\RouteCollection;
-use NW\Route\Router;
+use WalkWeb\NW\App;
+use WalkWeb\NW\AppException;
+use WalkWeb\NW\Request;
+use WalkWeb\NW\Response;
+use WalkWeb\NW\Route\RouteCollection;
+use WalkWeb\NW\Route\Router;
 use ReflectionClass;
 use ReflectionException;
 use Tests\AbstractTest;

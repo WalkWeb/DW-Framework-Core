@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
-use NW\AppException;
-use NW\Logger;
+use WalkWeb\NW\AppException;
+use WalkWeb\NW\Logger;
 use Tests\AbstractTest;
 
 class LoggerTest extends AbstractTest

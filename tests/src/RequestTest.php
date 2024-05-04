@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\NWFramework;
+namespace Tests\src\WalkWeb\NWFramework;
 
-use NW\Cookie;
-use NW\Request;
+use WalkWeb\NW\Cookie;
+use WalkWeb\NW\Request;
 use Tests\AbstractTest;
 
 class RequestTest extends AbstractTest

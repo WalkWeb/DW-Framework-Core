@@ -1,6 +1,6 @@
 <?php
 
-namespace NW\Traits;
+namespace WalkWeb\NW\Traits;
 
 trait PaginationTrait
 {

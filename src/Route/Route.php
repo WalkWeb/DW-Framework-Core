@@ -1,8 +1,8 @@
 <?php
 
-namespace NW\Route;
+namespace WalkWeb\NW\Route;
 
-use NW\Request;
+use WalkWeb\NW\Request;
 
 class Route
 {
