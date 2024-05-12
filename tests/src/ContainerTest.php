@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\src\WalkWeb\NWFramework;
 
+use Tests\utils\ExampleUser;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Captcha;
+use WalkWeb\NW\MySQL\ConnectionPool;
 use WalkWeb\NW\Container;
 use WalkWeb\NW\Cookie;
 use WalkWeb\NW\Csrf;
@@ -13,8 +15,8 @@ use WalkWeb\NW\Logger;
 use WalkWeb\NW\Mailer;
 use WalkWeb\NW\Request;
 use WalkWeb\NW\Runtime;
+use WalkWeb\NW\Validator;
 use Tests\AbstractTest;
-use Tests\utils\ExampleUser;
 
 class ContainerTest extends AbstractTest
 {
@@ -27,13 +29,16 @@ class ContainerTest extends AbstractTest
         $container = Container::create();
 
         self::assertEquals(
+            new ConnectionPool($container, DB_CONFIGS),
+            $container->getConnectionPool()
+        );
+        self::assertEquals(
             new Logger(SAVE_LOG, LOG_DIR, LOG_FILE_NAME),
             $container->getLogger()
         );
         self::assertEquals(new Csrf(), $container->getCsrf());
         self::assertEquals(new Captcha($container), $container->getCaptcha());
-        self::assertEquals(HANDLERS_DIR, $container->getHandlersDir());
-        self::assertEquals(MIDDLEWARE_DIR, $container->getMiddlewareDir());
+        self::assertEquals(new Validator($container), $container->getValidator());
         self::assertEquals(CACHE_DIR, $container->getCacheDir());
         self::assertEquals(VIEW_DIR, $container->getViewDir());
         self::assertEquals(APP_ENV, $container->getAppEnv());
@@ -43,8 +48,6 @@ class ContainerTest extends AbstractTest
         $loggerSaveLog = false;
         $loggerDir = 'logger_dir';
         $loggerFileName = 'logger_file_name';
-        $handlersDir = 'handlers_dir';
-        $middlewareDir = 'middleware_dir';
         $cacheDir = 'cache_dir';
         $viewDir = 'view_dir';
         $template = 'template';
@@ -56,8 +59,6 @@ class ContainerTest extends AbstractTest
             $loggerSaveLog,
             $loggerDir,
             $loggerFileName,
-            $handlersDir,
-            $middlewareDir,
             $cacheDir,
             $viewDir,
             $template,
@@ -69,8 +70,7 @@ class ContainerTest extends AbstractTest
         );
         self::assertEquals(new Csrf(), $container->getCsrf());
         self::assertEquals(new Captcha($container), $container->getCaptcha());
-        self::assertEquals($handlersDir, $container->getHandlersDir());
-        self::assertEquals($middlewareDir, $container->getMiddlewareDir());
+        self::assertEquals(new Validator($container), $container->getValidator());
         self::assertEquals($cacheDir, $container->getCacheDir());
         self::assertEquals($viewDir, $container->getViewDir());
         self::assertEquals($appEnv, $container->getAppEnv());
@@ -91,6 +91,23 @@ class ContainerTest extends AbstractTest
         $container->set(Logger::class, $logger);
 
         self::assertEquals($logger, $container->getLogger());
+    }
+
+    /**
+     * @throws AppException
+     */
+    public function testContainerGetConnectionPool(): void
+    {
+        $container = $this->getContainer();
+
+        $connectionPool = $container->get(ConnectionPool::class);
+        self::assertInstanceOf(ConnectionPool::class, $connectionPool);
+
+        $connectionPool = $container->get('connection_pool');
+        self::assertInstanceOf(ConnectionPool::class, $connectionPool);
+
+        $connectionPool = $container->getConnectionPool();
+        self::assertInstanceOf(ConnectionPool::class, $connectionPool);
     }
 
     /**
@@ -168,6 +185,23 @@ class ContainerTest extends AbstractTest
         $container->set(Runtime::class, $cookie);
 
         self::assertEquals($cookie, $container->getRuntime());
+    }
+
+    /**
+     * @throws AppException
+     */
+    public function testContainerGetValidator(): void
+    {
+        $container = $this->getContainer();
+
+        $validator = $container->get(Validator::class);
+        self::assertInstanceOf(Validator::class, $validator);
+
+        $validator = $container->get('validator');
+        self::assertInstanceOf(Validator::class, $validator);
+
+        $validator = $container->getValidator();
+        self::assertInstanceOf(Validator::class, $validator);
     }
 
     /**
@@ -320,10 +354,10 @@ class ContainerTest extends AbstractTest
     {
         $container = $this->getContainer();
 
-        $container->get(Captcha::class);
+        $container->get(Validator::class);
 
-        self::assertTrue($container->exist(Captcha::class));
-        self::assertTrue($container->exist('captcha'));
+        self::assertTrue($container->exist(Validator::class));
+        self::assertTrue($container->exist('validator'));
     }
 
     /**

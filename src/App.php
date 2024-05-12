@@ -45,13 +45,11 @@ class App
             return $this->createNotFoundPage();
         }
 
-        $handlerClass = self::$container->getHandlersDir() . '\\' . $handler;
-
-        if (!class_exists($handlerClass)) {
-            throw new AppException(sprintf(self::ERROR_MISS_HANDLER, $handlerClass));
+        if (!class_exists($handler)) {
+            throw new AppException(sprintf(self::ERROR_MISS_HANDLER, $handler));
         }
 
-        return $this->handleRequest($request, $middleware, new $handlerClass(self::$container));
+        return $this->handleRequest($request, $middleware, new $handler(self::$container));
     }
 
     /**
@@ -184,8 +182,7 @@ class App
     {
         $classes = [];
 
-        foreach ($middlewares as $priority => $middleware) {
-            $className = $this->getContainer()->getMiddlewareDir() . '\\' . $middleware;
+        foreach ($middlewares as $priority => $className) {
 
             if (!class_exists($className)) {
                 throw new AppException(sprintf(self::ERROR_MISS_MIDDLEWARE, $className));

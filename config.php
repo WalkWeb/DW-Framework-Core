@@ -33,12 +33,6 @@ define('TEMPLATE_DEFAULT', 'default');
 /** Ключ для хэшей */
 define('KEY', 'YOU_KEY');
 
-/** Директория с контролерами */
-define('HANDLERS_DIR', 'Tests/utils');
-
-/** Директория с middleware */
-define('MIDDLEWARE_DIR', 'Tests/utils');
-
 /** Директория с кэшем */
 define('CACHE_DIR', 'cache');
 
