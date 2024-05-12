@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\WalkWeb\NWFramework\Route;
+namespace Tests\src\Route;
 
 use WalkWeb\NW\Route\Route;
 use WalkWeb\NW\Route\RouteCollection;

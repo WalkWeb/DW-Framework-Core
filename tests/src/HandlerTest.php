@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\WalkWeb\NWFramework;
+namespace Tests\src;
 
 use Exception;
 use WalkWeb\NW\AbstractHandler;

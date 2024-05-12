@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\WalkWeb\NWFramework\Traits;
+namespace Tests\src\Traits;
 
 use DateTime;
 use WalkWeb\NW\Traits\DateTrait;

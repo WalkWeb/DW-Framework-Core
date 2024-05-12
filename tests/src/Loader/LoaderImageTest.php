@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\src\WalkWeb\NWFramework\Loader;
+namespace Tests\src\Loader;
 
 use DateTime;
 use Exception;
