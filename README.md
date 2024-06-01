@@ -6,3 +6,7 @@ Create for fun!
 Install:
 
 `composer require walkweb/dw-framework-core`
+
+## Test coverage
+
+![alt text](public/images/test-coverage.png)
