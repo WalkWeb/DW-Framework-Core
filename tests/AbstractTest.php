@@ -6,9 +6,7 @@ namespace Tests;
 
 use WalkWeb\NW\App;
 use WalkWeb\NW\AppException;
-use WalkWeb\NW\MySQL\Connection;
 use WalkWeb\NW\Container;
-use WalkWeb\NW\Response;
 use WalkWeb\NW\Route\Router;
 use WalkWeb\NW\Runtime;
 use WalkWeb\NW\Traits\StringTrait;
@@ -51,12 +49,14 @@ abstract class AbstractTest extends TestCase
     /**
      * @param string $appEnv
      * @param string $viewDir
+     * @param string $migrationDir
      * @return Container
      * @throws AppException
      */
     protected function getContainer(
         string $appEnv = APP_ENV,
-        string $viewDir = VIEW_DIR
+        string $viewDir = VIEW_DIR,
+        string $migrationDir = MIGRATION_DIR
     ): Container
     {
         $container = new Container(
@@ -68,48 +68,11 @@ abstract class AbstractTest extends TestCase
             LOG_FILE_NAME,
             CACHE_DIR,
             $viewDir,
+            $migrationDir,
             TEMPLATE_DEFAULT,
         );
         $container->set(Runtime::class, new Runtime());
 
         return $container;
-    }
-
-    /**
-     * @param Connection $db
-     * @param string $id
-     * @param string $name
-     * @throws AppException
-     */
-    protected function insert(Connection $db, string $id, string $name): void
-    {
-        $db->query(
-            'INSERT INTO `books` (`id`, `name`) VALUES (?, ?);',
-            [
-                ['type' => 's', 'value' => $id],
-                ['type' => 's', 'value' => $name],
-            ]
-        );
-    }
-
-    /**
-     * @param Connection $db
-     * @param string $table
-     * @throws AppException
-     */
-    protected function clearTable(Connection $db, string $table): void
-    {
-        $db->query("DELETE FROM `$table`;");
-    }
-
-    /**
-     * Проверяет, что получен успешный json ответ
-     *
-     * @param Response $response
-     */
-    protected static function assertJsonSuccess(Response $response): void
-    {
-        self::assertEquals(Response::OK, $response->getStatusCode());
-        self::assertEquals('{"success":true}', $response->getBody());
     }
 }
