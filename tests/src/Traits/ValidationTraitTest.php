@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\src\Traits;
 
+use DateTime;
+use Exception;
 use Tests\AbstractTest;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Traits\ValidationTrait;
@@ -86,6 +88,97 @@ class ValidationTraitTest extends AbstractTest
         $this->expectException(AppException::class);
         $this->expectExceptionMessage($error);
         self::array($data, $filed, $error);
+    }
+
+    /**
+     * @dataProvider stringOrNullSuccessDataProvider
+     * @param array $data
+     * @param string $filed
+     * @param string $error
+     * @param string|null $expected
+     * @throws AppException
+     */
+    public function testValidationStringOrNullSuccess(array $data, string $filed, string $error, ?string $expected): void
+    {
+        self::assertEquals($expected, self::stringOrNull($data, $filed, $error));
+    }
+
+    /**
+     * @dataProvider stringOrNullFailDataProvider
+     * @param array $data
+     * @param string $filed
+     * @param string $error
+     * @throws AppException
+     */
+    public function testValidationStringOrNullFail(array $data, string $filed, string $error): void
+    {
+        $this->expectException(AppException::class);
+        $this->expectExceptionMessage($error);
+        self::stringOrNull($data, $filed, $error);
+    }
+
+    /**
+     * @dataProvider stringOrDefaultDataProvider
+     * @param array $data
+     * @param string $filed
+     * @param string $default
+     * @param string $expected
+     */
+    public function testValidationStringOrDefault(array $data, string $filed, string $default, string $expected): void
+    {
+        self::assertEquals($expected, self::stringOrDefault($data, $filed, $default));
+    }
+
+    /**
+     * @dataProvider uuidSuccessDataProvider
+     * @param array $data
+     * @param string $filed
+     * @param string $error
+     * @throws AppException
+     */
+    public function testValidationUuidSuccess(array $data, string $filed, string $error): void
+    {
+        self::assertEquals($data[$filed], self::uuid($data, $filed, $error));
+    }
+
+    /**
+     * @dataProvider uuidFailDataProvider
+     * @param array $data
+     * @param string $filed
+     * @param string $error
+     * @throws AppException
+     */
+    public function testValidationUuidFail(array $data, string $filed, string $error): void
+    {
+        $this->expectException(AppException::class);
+        $this->expectExceptionMessage($error);
+        self::uuid($data, $filed, $error);
+    }
+
+    /**
+     * @dataProvider dateSuccessDataProvider
+     * @param array $data
+     * @param string $filed
+     * @param string $error
+     * @throws Exception
+     */
+    public function testValidationDateSuccess(array $data, string $filed, string $error): void
+    {
+        self::assertEquals(new DateTime($data[$filed]), self::date($data, $filed, $error));
+    }
+
+    /**
+     * @dataProvider dateFailDataProvider
+     * @param array $data
+     * @param string $filed
+     * @param string $error
+     * @throws Exception
+     */
+    public function testValidationDateFail(array $data, string $filed, string $error): void
+    {
+        $this->expectException(AppException::class);
+        $this->expectExceptionMessage($error);
+        self::date($data, $filed, $error);
     }
 
     /**
@@ -230,6 +323,172 @@ class ValidationTraitTest extends AbstractTest
                 ],
                 'value',
                 'error #2',
+            ],
+        ];
+    }
+
+    public function stringOrNullSuccessDataProvider(): array
+    {
+        return [
+            [
+                [
+                    'property' => 'name',
+                ],
+                'property',
+                'error #1',
+                'name',
+            ],
+            [
+                [
+                    'value' => null,
+                ],
+                'value',
+                'error #2',
+                null,
+            ],
+        ];
+    }
+
+    public function stringOrNullFailDataProvider(): array
+    {
+        return [
+            [
+                [
+                    'property' => 123,
+                ],
+                'property',
+                'error #1',
+            ],
+            [
+                [],
+                'property',
+                'error #2',
+            ],
+        ];
+    }
+
+    public function stringOrDefaultDataProvider(): array
+    {
+        return [
+            [
+                [
+                    'property' => 'value',
+                ],
+                'property',
+                'default_value',
+                'value',
+            ],
+            [
+                [
+                    'property' => null,
+                ],
+                'property',
+                'default_value #1',
+                'default_value #1',
+            ],
+            [
+                [
+                    'property' => 123,
+                ],
+                'property',
+                'default_value #2',
+                'default_value #2',
+            ],
+            [
+                [],
+                'property',
+                'default_value #3',
+                'default_value #3',
+            ],
+        ];
+    }
+
+    public function uuidSuccessDataProvider(): array
+    {
+        return [
+            [
+                [
+                    'property' => '05d9017b-f141-46fd-9266-9eca871e0e45',
+                ],
+                'property',
+                'error'
+            ],
+        ];
+    }
+
+    public function uuidFailDataProvider(): array
+    {
+        return [
+            [
+                [],
+                'property',
+                'error #1'
+            ],
+            [
+                [
+                    'property' => null,
+                ],
+                'property',
+                'error #2'
+            ],
+            [
+                [
+                    'property' => 123,
+                ],
+                'property',
+                'error #3'
+            ],
+            [
+                [
+                    'property' => '05d9017b-f141-46fd-9266-9eca871e0e',
+                ],
+                'property',
+                'error #4'
+            ],
+        ];
+    }
+
+    public function dateSuccessDataProvider(): array
+    {
+        return [
+            [
+                [
+                    'property' => '2020-12-25 20:00:00',
+                ],
+                'property',
+                'error'
+            ],
+        ];
+    }
+
+    public function dateFailDataProvider(): array
+    {
+        return [
+            [
+                [],
+                'property',
+                'error #1'
+            ],
+            [
+                [
+                    'property' => null,
+                ],
+                'property',
+                'error #2'
+            ],
+            [
+                [
+                    'property' => 123,
+                ],
+                'property',
+                'error #3'
+            ],
+            [
+                [
+                    'property' => '2020-55-55 20:00:00',
+                ],
+                'property',
+                'error #4'
             ],
         ];
     }

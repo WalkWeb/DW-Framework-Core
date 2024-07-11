@@ -29,6 +29,41 @@ trait ValidationTrait
     }
 
     /**
+     * @param array $data
+     * @param string $filed
+     * @param string $error
+     * @return string|null
+     * @throws AppException
+     */
+    protected static function stringOrNull(array $data, string $filed, string $error): ?string
+    {
+        if (!array_key_exists($filed, $data)) {
+            throw new AppException($error);
+        }
+
+        if (is_string($data[$filed]) || $data[$filed] === null) {
+            return $data[$filed];
+        }
+
+        throw new AppException($error);
+    }
+
+    /**
+     * @param array $data
+     * @param string $filed
+     * @param string $default
+     * @return string
+     */
+    protected static function stringOrDefault(array $data, string $filed, string $default): string
+    {
+        if (!array_key_exists($filed, $data) || !is_string($data[$filed])) {
+            return $default;
+        }
+
+        return $data[$filed];
+    }
+
+    /**
      * @param string $string
      * @param int $minLength
      * @param int $maxLength
@@ -48,18 +83,23 @@ trait ValidationTrait
     }
 
     /**
-     * @param string $string
+     * @param array $data
+     * @param string $filed
      * @param string $error
      * @return string
      * @throws AppException
      */
-    protected static function uuid(string $string, string $error): string
+    protected static function uuid(array $data, string $filed, string $error): string
     {
-        if (!Uuid::isValid($string)) {
+        if (!array_key_exists($filed, $data) || !is_string($data[$filed])) {
             throw new AppException($error);
         }
 
-        return $string;
+        if (!Uuid::isValid($data[$filed])) {
+            throw new AppException($error);
+        }
+
+        return $data[$filed];
     }
 
     /**
@@ -110,15 +150,20 @@ trait ValidationTrait
     }
 
     /**
-     * @param string $date
+     * @param array $data
+     * @param string $filed
      * @param string $error
      * @return DateTimeInterface
      * @throws AppException
      */
-    protected static function date(string $date, string $error): DateTimeInterface
+    protected static function date(array $data, string $filed, string $error): DateTimeInterface
     {
+        if (!array_key_exists($filed, $data) || !is_string($data[$filed])) {
+            throw new AppException($error);
+        }
+
         try {
-            return new DateTime($date);
+            return new DateTime($data[$filed]);
         } catch (Exception $e) {
             throw new AppException($error);
         }
