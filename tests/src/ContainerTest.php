@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\src;
 
-use Tests\utils\ExampleUser;
+use stdClass;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Captcha;
 use WalkWeb\NW\MySQL\ConnectionPool;
@@ -256,7 +256,7 @@ class ContainerTest extends AbstractTest
     public function testContainerGetUserSuccess(): void
     {
         $container = $this->getContainer();
-        $user = new ExampleUser();
+        $user = new stdClass();
 
         self::assertFalse($container->exist('user'));
 
@@ -264,6 +264,25 @@ class ContainerTest extends AbstractTest
 
         self::assertTrue($container->exist('user'));
         self::assertEquals($user, $container->getUser());
+    }
+
+    /**
+     * @throws AppException
+     */
+    public function testContainerUnset(): void
+    {
+        $container = $this->getContainer();
+        $user = new stdClass();
+
+        self::assertFalse($container->exist('user'));
+
+        $container->set('user', $user);
+
+        self::assertTrue($container->exist('user'));
+
+        $container->unset('user');
+
+        self::assertFalse($container->exist('user'));
     }
 
     /**
