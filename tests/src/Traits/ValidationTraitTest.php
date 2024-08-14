@@ -358,6 +358,36 @@ class ValidationTraitTest extends AbstractTest
     }
 
     /**
+     * @dataProvider uuidOrNullSuccessDataProvider
+     * @param array $data
+     * @param string $field
+     * @param string|null $expected
+     * @throws AppException
+     */
+    public function testValidationUuidOrNullSuccess(array $data, string $field, ?string $expected): void
+    {
+        if ($expected === null) {
+            self::assertNull(self::uuidOrNull($data, $field, ''));
+        } else {
+            self::assertEquals($expected, self::uuidOrNull($data, $field, ''));
+        }
+    }
+
+    /**
+     * @dataProvider uuidOrNullFailDataProvider
+     * @param array $data
+     * @param string $field
+     * @param string $error
+     * @throws AppException
+     */
+    public function testValidationUuidOrNullFail(array $data, string $field, string $error): void
+    {
+        $this->expectException(AppException::class);
+        $this->expectExceptionMessage($error);
+        self::uuidOrNull($data, $field, $error);
+    }
+
+    /**
      * @return array
      */
     public function intMinMaxValueSuccessDataProvider(): array
@@ -919,6 +949,60 @@ class ValidationTraitTest extends AbstractTest
             [
                 [
                     'field' => '2020-99-99 20:00:00',
+                ],
+                'field',
+                'error-3',
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function uuidOrNullSuccessDataProvider(): array
+    {
+        return [
+            [
+                [
+                    'field' => '4445e810-ab25-481b-a798-81062fa40b76',
+                ],
+                'field',
+                '4445e810-ab25-481b-a798-81062fa40b76'
+            ],
+            [
+                [
+                    'field' => null,
+                ],
+                'field',
+                null,
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function uuidOrNullFailDataProvider(): array
+    {
+        return [
+            // miss field
+            [
+                [],
+                'field',
+                'error-1',
+            ],
+            // field invalid type
+            [
+                [
+                    'field' => 123,
+                ],
+                'field',
+                'error-2',
+            ],
+            // field invalid uuid
+            [
+                [
+                    'field' => '7c28beea-0b3e-425f-8121-10dfab8db861xxx',
                 ],
                 'field',
                 'error-3',

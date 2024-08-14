@@ -103,6 +103,30 @@ trait ValidationTrait
     }
 
     /**
+     * @param array $data
+     * @param string $field
+     * @param string $error
+     * @return string|null
+     * @throws AppException
+     */
+    protected static function uuidOrNull(array $data, string $field, string $error): ?string
+    {
+        if (!array_key_exists($field, $data)) {
+            throw new AppException($error);
+        }
+
+        if ($data[$field] === null) {
+            return null;
+        }
+
+        if (is_string($data[$field]) && Uuid::isValid($data[$field])) {
+            return $data[$field];
+        }
+
+        throw new AppException($error);
+    }
+
+    /**
      * TODO Стоит подумать над добавлением / вначале и в конце, чтобы не приходилось добавлять это каждый раз вручную
      *
      * @param string $string
