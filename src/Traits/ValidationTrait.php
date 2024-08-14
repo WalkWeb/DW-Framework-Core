@@ -250,6 +250,26 @@ trait ValidationTrait
      * @param array $data
      * @param string $field
      * @param string $error
+     * @return int|null
+     * @throws AppException
+     */
+    protected static function intOrNull(array $data, string $field, string $error): ?int
+    {
+        if (!array_key_exists($field, $data)) {
+            throw new AppException($error);
+        }
+
+        if (is_int($data[$field]) || $data[$field] === null) {
+            return $data[$field];
+        }
+
+        throw new AppException($error);
+    }
+
+    /**
+     * @param array $data
+     * @param string $field
+     * @param string $error
      * @return array
      * @throws AppException
      */

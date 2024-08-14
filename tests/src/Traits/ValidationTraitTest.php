@@ -388,6 +388,35 @@ class ValidationTraitTest extends AbstractTest
     }
 
     /**
+     * @dataProvider intOrNullSuccessDataProvider
+     * @param array $data
+     * @param string $field
+     * @param int|null $expected
+     * @throws AppException
+     */
+    public function testValidationIntOrNullSuccess(array $data, string $field, ?int $expected): void
+    {
+        if ($expected === null) {
+            self::assertNull(self::intOrNull($data, $field, ''));
+        } else {
+            self::assertEquals($expected, self::intOrNull($data, $field, ''));
+        }
+    }
+
+    /**
+     * @dataProvider intOrNullFailDataProvider
+     * @param array $data
+     * @param string $field
+     * @param string $error
+     */
+    public function testValidationIntOrNullFail(array $data, string $field, string $error): void
+    {
+        $this->expectException(AppException::class);
+        $this->expectExceptionMessage($error);
+        self::intOrNull($data, $field, $error);
+    }
+
+    /**
      * @return array
      */
     public function intMinMaxValueSuccessDataProvider(): array
@@ -1006,6 +1035,52 @@ class ValidationTraitTest extends AbstractTest
                 ],
                 'field',
                 'error-3',
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function intOrNullSuccessDataProvider(): array
+    {
+        return [
+            [
+                [
+                    'field' => 123,
+                ],
+                'field',
+                123
+            ],
+            [
+                [
+                    'field' => null,
+                ],
+                'field',
+                null,
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function intOrNullFailDataProvider(): array
+    {
+        return [
+            // miss field
+            [
+                [],
+                'field',
+                'error-1',
+            ],
+            // field invalid type
+            [
+                [
+                    'field' => 'string',
+                ],
+                'field',
+                'error-2',
             ],
         ];
     }
