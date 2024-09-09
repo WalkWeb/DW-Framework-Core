@@ -39,12 +39,16 @@ class StringTraitTest extends AbstractTest
             self::transliterate('Перед началом установки вы должны знать, для чего вы хотите использовать PHP.')
         );
         self::assertEquals(
-            'Sozdavat-veb-sayty-i-veb-prilozheniya-(Skripty-na-storone-servera)',
+            'Sozdavat-veb-sayty-i-veb-prilozheniya-Skripty-na-storone-servera',
             self::transliterate('Создавать веб-сайты и веб-приложения (Скрипты на стороне сервера)')
         );
         self::assertEquals(
             'V-sluchae-ustanovki-servera-i-PHP-samostoyatelno',
             self::transliterate('В случае установки сервера и PHP самостоятельно')
+        );
+        self::assertEquals(
+            'Diablo-2-Resurrected-Runnye-slova-Runewords',
+            self::transliterate('Diablo 2: Resurrected — Рунные слова (Runewords)')
         );
     }
 }
