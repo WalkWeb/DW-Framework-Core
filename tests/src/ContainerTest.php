@@ -15,6 +15,7 @@ use WalkWeb\NW\Logger;
 use WalkWeb\NW\Mailer;
 use WalkWeb\NW\Request;
 use WalkWeb\NW\Runtime;
+use WalkWeb\NW\Translation;
 use WalkWeb\NW\Validator;
 use Tests\AbstractTest;
 
@@ -33,7 +34,7 @@ class ContainerTest extends AbstractTest
             $container->getConnectionPool()
         );
         self::assertEquals(
-            new Logger(SAVE_LOG, LOG_DIR, LOG_FILE_NAME),
+            new Logger(SAVE_LOG, LOG_DIR),
             $container->getLogger()
         );
         self::assertEquals(new Csrf($container), $container->getCsrf());
@@ -48,11 +49,11 @@ class ContainerTest extends AbstractTest
         $appEnv = Container::APP_PROD;
         $loggerSaveLog = false;
         $loggerDir = 'logger_dir';
-        $loggerFileName = 'logger_file_name';
         $cacheDir = 'cache_dir';
         $viewDir = 'view_dir';
         $migrationDir = 'migration_dir';
         $template = 'template';
+        $translateDir = 'translate_dir';
 
         $container = Container::create(
             $appEnv,
@@ -60,15 +61,15 @@ class ContainerTest extends AbstractTest
             MAIL_CONFIG,
             $loggerSaveLog,
             $loggerDir,
-            $loggerFileName,
             $cacheDir,
             $viewDir,
             $migrationDir,
             $template,
+            $translateDir,
         );
 
         self::assertEquals(
-            new Logger($loggerSaveLog, $loggerDir, $loggerFileName),
+            new Logger($loggerSaveLog, $loggerDir),
             $container->getLogger()
         );
         self::assertEquals(new Csrf($container), $container->getCsrf());
@@ -79,6 +80,7 @@ class ContainerTest extends AbstractTest
         self::assertEquals($migrationDir, $container->getMigrationDir());
         self::assertEquals($appEnv, $container->getAppEnv());
         self::assertEquals($template, $container->getTemplate());
+        self::assertEquals($translateDir, $container->getTranslateDir());
     }
 
     /**
@@ -88,7 +90,7 @@ class ContainerTest extends AbstractTest
      */
     public function testContainerSetService(): void
     {
-        $logger = new Logger(SAVE_LOG, LOG_DIR, LOG_FILE_NAME);
+        $logger = new Logger(SAVE_LOG, LOG_DIR);
         $logger->addLog('abc');
 
         $container = $this->getContainer();
@@ -223,6 +225,25 @@ class ContainerTest extends AbstractTest
 
         $mailer = $container->getMailer();
         self::assertInstanceOf(Mailer::class, $mailer);
+    }
+
+    /**
+     * @throws AppException
+     */
+    public function testContainerGetTranslation(): void
+    {
+        $container = $this->getContainer();
+
+        $translation = $container->get(Translation::class);
+        self::assertInstanceOf(Translation::class, $translation);
+
+        $translation = $container->get('translation');
+        self::assertInstanceOf(Translation::class, $translation);
+
+        $translation = $container->getTranslation();
+        self::assertInstanceOf(Translation::class, $translation);
+
+        self::assertEquals(LANGUAGE, $translation->getLanguage());
     }
 
     /**

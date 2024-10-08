@@ -48,8 +48,11 @@ define('SAVE_LOG', false);
 /** Директория хранения файла */
 define('LOG_DIR', __DIR__);
 
-/** Имя файла для хранения логов */
-define('LOG_FILE_NAME', 'logs');
+/** Директория хранения переводов */
+define('TRANSLATE_DIR', DIR . '/translations/');
+
+/** Язык интерфейса */
+define('LANGUAGE', 'ru');
 
 /** Параметры для отправки почты */
 define('MAIL_CONFIG', [

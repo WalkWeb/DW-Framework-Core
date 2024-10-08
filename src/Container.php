@@ -9,7 +9,7 @@ use WalkWeb\NW\MySQL\ConnectionPool;
 class Container
 {
     public const APP_PROD = 'prod';
-    public const APP_DEV  = 'dev';
+    public const APP_DEV = 'dev';
     public const APP_TEST = 'test';
 
     public const GET_ERROR = '%s cannot be created automatically, it must be added to the container via set() manually';
@@ -27,6 +27,8 @@ class Container
         'validator'           => Validator::class,
         Mailer::class         => Mailer::class,
         'mailer'              => Mailer::class,
+        Translation::class    => Translation::class,
+        'translation'         => Translation::class,
         Request::class        => Request::class,
         Cookie::class         => Cookie::class,
         Runtime::class        => Runtime::class,
@@ -42,12 +44,12 @@ class Container
     private array $mailerConfig;
     private bool $loggerSaveLog;
     private string $loggerDir;
-    // TODO Именование файла логов делать фиксированным
-    private string $loggerFileName;
     private string $cacheDir;
     private string $viewDir;
     private string $migrationDir;
     private string $template;
+    private string $translateDir;
+    private string $language;
 
     /**
      * @param string $appEnv
@@ -55,11 +57,12 @@ class Container
      * @param array $mailerConfig
      * @param bool $loggerSaveLog
      * @param string $loggerDir
-     * @param string $loggerFileName
      * @param string $cacheDir
      * @param string $viewDir
      * @param string $migrationDir
      * @param string $template
+     * @param string $translateDir
+     * @param string $language
      * @throws AppException
      */
     public function __construct(
@@ -68,11 +71,12 @@ class Container
         array $mailerConfig,
         bool $loggerSaveLog,
         string $loggerDir,
-        string $loggerFileName,
         string $cacheDir,
         string $viewDir,
         string $migrationDir,
-        string $template
+        string $template,
+        string $translateDir,
+        string $language
     )
     {
         $this->setAppEnv($appEnv);
@@ -80,11 +84,12 @@ class Container
         $this->mailerConfig = $mailerConfig;
         $this->loggerSaveLog = $loggerSaveLog;
         $this->loggerDir = $loggerDir;
-        $this->loggerFileName = $loggerFileName;
         $this->cacheDir = $cacheDir;
         $this->viewDir = $viewDir;
         $this->migrationDir = $migrationDir;
         $this->template = $template;
+        $this->translateDir = $translateDir;
+        $this->language = $language;
     }
 
     /**
@@ -93,11 +98,12 @@ class Container
      * @param array $mailerConfig
      * @param bool $loggerSaveLog
      * @param string $loggerDir
-     * @param string $loggerFileName
      * @param string $cacheDir
      * @param string $viewDir
      * @param string $migrationDir
      * @param string $template
+     * @param string $translateDir
+     * @param string $language
      * @return static
      * @throws AppException
      */
@@ -107,11 +113,12 @@ class Container
         array $mailerConfig = MAIL_CONFIG,
         bool $loggerSaveLog = SAVE_LOG,
         string $loggerDir = LOG_DIR,
-        string $loggerFileName = LOG_FILE_NAME,
         string $cacheDir = CACHE_DIR,
         string $viewDir = VIEW_DIR,
         string $migrationDir = MIGRATION_DIR,
-        string $template = TEMPLATE_DEFAULT
+        string $template = TEMPLATE_DEFAULT,
+        string $translateDir = TRANSLATE_DIR,
+        string $language = LANGUAGE
     ): self
     {
         return new self(
@@ -120,11 +127,12 @@ class Container
             $mailerConfig,
             $loggerSaveLog,
             $loggerDir,
-            $loggerFileName,
             $cacheDir,
             $viewDir,
             $migrationDir,
-            $template
+            $template,
+            $translateDir,
+            $language
         );
     }
 
@@ -271,6 +279,17 @@ class Container
     }
 
     /**
+     * @return Translation
+     * @throws AppException
+     */
+    public function getTranslation(): Translation
+    {
+        /** @var Translation $service */
+        $service = $this->get(Translation::class);
+        return $service;
+    }
+
+    /**
      * @return object
      * @throws AppException
      */
@@ -317,6 +336,14 @@ class Container
     public function getTemplate(): string
     {
         return $this->template;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTranslateDir(): string
+    {
+        return $this->translateDir;
     }
 
     /**
@@ -367,24 +394,22 @@ class Container
      */
     private function createService(string $class): object
     {
-        if ($class === ConnectionPool::class) {
-            $service = new ConnectionPool(
-                $this,
-                $this->dbConfigs,
-            );
-        } elseif ($class === Mailer::class) {
-            $service = new Mailer(
-                $this,
-                $this->mailerConfig
-            );
-        }  elseif ($class === Logger::class) {
-            $service = new Logger(
-                $this->loggerSaveLog,
-                $this->loggerDir,
-                $this->loggerFileName,
-            );
-        } else {
-            $service = new $class($this);
+        switch ($class) {
+            case ConnectionPool::class:
+                $service = new ConnectionPool($this, $this->dbConfigs);
+                break;
+            case Mailer::class:
+                $service = new Mailer($this, $this->mailerConfig);
+                break;
+            case Logger::class:
+                $service = new Logger($this->loggerSaveLog, $this->loggerDir);
+                break;
+            case Translation::class:
+                $service = new Translation($this, $this->language);
+                break;
+            default:
+                $service = new $class($this);
+                break;
         }
 
         $this->storage[$this->map[$class]] = $service;
