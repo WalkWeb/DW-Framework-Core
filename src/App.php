@@ -12,8 +12,8 @@ class App
     public const ERROR_MISS_MIDDLEWARE    = 'Middleware missing: %s';
     public const ERROR_INVALID_MIDDLEWARE = 'Invalid middleware class: %s, expected extends AbstractMiddleware';
 
-    public const TEMPLATE_500_PAGE        = '/default/errors/500.php';
-    public const TEMPLATE_404_PAGE        = '/default/errors/404.php';
+    public const TEMPLATE_500_PAGE        = '/' . TEMPLATE_DEFAULT . '/errors/500.php';
+    public const TEMPLATE_404_PAGE        = '/' . TEMPLATE_DEFAULT . '/errors/404.php';
 
     private Router $router;
     private array $middleware;
