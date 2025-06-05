@@ -1,6 +1,6 @@
-vendor/
-bin/
-html/
+/vendor/
+/bin/
+/html/
 .idea/
 
 composer.lock
