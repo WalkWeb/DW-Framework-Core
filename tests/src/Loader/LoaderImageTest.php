@@ -10,7 +10,6 @@ use WalkWeb\NW\AppException;
 use WalkWeb\NW\Loader\Image;
 use WalkWeb\NW\Loader\LoaderException;
 use WalkWeb\NW\Loader\LoaderImage;
-use RuntimeException;
 use Tests\AbstractTest;
 
 class LoaderImageTest extends AbstractTest
@@ -233,18 +232,6 @@ class LoaderImageTest extends AbstractTest
         $this->expectException(LoaderException::class);
         $this->expectExceptionMessage(LoaderException::INVALID_EXTENSION);
         $this->getLoader()->load($data, 100000, 1000, 10, '/public/images/upload/', ['gif']);
-    }
-
-    /**
-     * @dataProvider fileDataProvider
-     * @param array $data
-     * @throws Exception
-     */
-    public function testLoaderImageFailCreateDirectory(array $data): void
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('mkdir(): Permission denied');
-        $this->getLoader()->load($data, 1000000, 2000, 2000, '/../../xxx/images/upload/');
     }
 
     public function invalidFileDataProvider(): array

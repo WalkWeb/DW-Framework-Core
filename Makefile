@@ -1,7 +1,17 @@
-PHP_BIN := php
+# Executables (local)
+DOCKER_COMP = docker compose
 
-test:
-	$(PHP_BIN) vendor/bin/phpunit
+# Docker containers
+PHP_CONT = $(DOCKER_COMP) exec php-7.4
+
+# Executables
+PHP      = $(PHP_CONT) php
+COMPOSER = $(PHP_CONT) composer
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+phpunit:
+	@$(DOCKER_COMP) exec php-7.4 vendor/bin/phpunit
 
 coverage:
-	$(PHP_BIN) vendor/bin/phpunit --coverage-html html
+	@$(DOCKER_COMP) exec php-7.4 vendor/bin/phpunit --coverage-html html
