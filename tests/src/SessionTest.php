@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\src;
 
 use WalkWeb\NW\Session;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class SessionTest extends AbstractTest
+class SessionTest extends AbstractTestCase
 {
     public function testSessionStart(): void
     {

@@ -63,6 +63,7 @@ class SimpleImageResizer
 
             return $path;
         } catch (Exception $e) {
+            restore_exception_handler();
             throw new AppException($e->getMessage());
         }
     }

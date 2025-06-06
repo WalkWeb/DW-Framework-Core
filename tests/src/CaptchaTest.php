@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Tests\src;
 
 use Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Captcha;
 use WalkWeb\NW\Container;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class CaptchaTest extends AbstractTest
+class CaptchaTest extends AbstractTestCase
 {
     /**
      * В проверке генерации картинки мы допускаем, что нам достаточно того, что мы получили строку и никаких ошибок не
@@ -29,10 +30,9 @@ class CaptchaTest extends AbstractTest
     /**
      * Тесты на успешную и неуспешную проверку капчи в DEV/PROD-режиме
      *
-     * @dataProvider normalAppEnvDataProvider
-     * @param string $appENV
      * @throws AppException
      */
+    #[DataProvider('normalAppEnvDataProvider')]
     public function testCaptchaCheckCaptchaNormalMode(string $appENV): void
     {
         $capthca = new Captcha($this->getContainer($appENV));
@@ -57,7 +57,7 @@ class CaptchaTest extends AbstractTest
         self::assertTrue($capthca->checkCaptcha('1234'));
     }
 
-    public function normalAppEnvDataProvider(): array
+    public static function normalAppEnvDataProvider(): array
     {
         return [
             [

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\src;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Mailer;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class MailerTest extends AbstractTest
+class MailerTest extends AbstractTestCase
 {
     /**
      * Тест на успешную отправку email
@@ -43,11 +44,9 @@ class MailerTest extends AbstractTest
     /**
      * Тесты на различные варианты некорректного конфига
      *
-     * @dataProvider invalidConfigDataProvider
-     * @param array $config
-     * @param string $error
      * @throws AppException
      */
+    #[DataProvider('invalidConfigDataProvider')]
     public function testMailInvalidConfig(array $config, string $error): void
     {
         $this->expectException(AppException::class);
@@ -58,7 +57,7 @@ class MailerTest extends AbstractTest
     /**
      * @return array
      */
-    public function invalidConfigDataProvider(): array
+    public static function invalidConfigDataProvider(): array
     {
         return [
             // Отсутствует smtp_host

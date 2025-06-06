@@ -6,9 +6,9 @@ namespace Tests\src;
 
 use Exception;
 use WalkWeb\NW\AppException;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class ValidatorTest extends AbstractTest
+class ValidatorTest extends AbstractTestCase
 {
     /**
      * @throws AppException

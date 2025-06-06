@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Tests\src;
 
 use Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
 use WalkWeb\NW\AbstractHandler;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Response;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 use Tests\utils\ExampleHandler;
 
-class HandlerTest extends AbstractTest
+class HandlerTest extends AbstractTestCase
 {
     /**
      * @throws Exception
@@ -54,10 +55,9 @@ class HandlerTest extends AbstractTest
     }
 
     /**
-     * @dataProvider jsonDataProvider
-     * @param array $data
      * @throws Exception
      */
+    #[DataProvider('jsonDataProvider')]
     public function testHandlerJson(array $data): void
     {
         $controller = new ExampleHandler($this->getContainer());
@@ -239,7 +239,7 @@ class HandlerTest extends AbstractTest
     /**
      * @return array
      */
-    public function jsonDataProvider(): array
+    public static function jsonDataProvider(): array
     {
         return [
             [

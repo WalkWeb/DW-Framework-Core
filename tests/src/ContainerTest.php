@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\src;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Captcha;
@@ -17,9 +18,9 @@ use WalkWeb\NW\Request;
 use WalkWeb\NW\Runtime;
 use WalkWeb\NW\Translation;
 use WalkWeb\NW\Validator;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class ContainerTest extends AbstractTest
+class ContainerTest extends AbstractTestCase
 {
     /**
      * @throws AppException
@@ -309,11 +310,9 @@ class ContainerTest extends AbstractTest
     /**
      * Тест на ситуацию, когда запрашиваются сервисы Request/Cookie/Runtime до того, как они установлены через set()
      *
-     * @dataProvider getServiceErrorDataProvider
-     * @param string $class
-     * @param string $error
      * @throws AppException
      */
+    #[DataProvider('getServiceErrorDataProvider')]
     public function testContainerGetServiceFail(string $class, string $error): void
     {
         $container = Container::create();
@@ -326,11 +325,9 @@ class ContainerTest extends AbstractTest
     /**
      * Аналогично testContainerGetServiceFail, только запрос идет к конкретному методу на получение сервиса
      *
-     * @dataProvider getMethodServiceErrorDataProvider
-     * @param string $method
-     * @param string $error
      * @throws AppException
      */
+    #[DataProvider('getMethodServiceErrorDataProvider')]
     public function testContainerGetMethodServiceFail(string $method, string $error): void
     {
         $container = Container::create();
@@ -415,7 +412,7 @@ class ContainerTest extends AbstractTest
     /**
      * @return array
      */
-    public function getServiceErrorDataProvider(): array
+    public static function getServiceErrorDataProvider(): array
     {
         return [
             [
@@ -436,7 +433,7 @@ class ContainerTest extends AbstractTest
     /**
      * @return array
      */
-    public function getMethodServiceErrorDataProvider(): array
+    public static function getMethodServiceErrorDataProvider(): array
     {
         return [
             [

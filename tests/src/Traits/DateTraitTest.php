@@ -6,9 +6,9 @@ namespace Tests\src\Traits;
 
 use DateTime;
 use WalkWeb\NW\Traits\DateTrait;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class DateTraitTest extends AbstractTest
+class DateTraitTest extends AbstractTestCase
 {
     use DateTrait;
 

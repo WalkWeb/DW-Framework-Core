@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\src;
+namespace Tests;
 
-use Tests\AbstractTest;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Translation;
 
-class TranslationTest extends AbstractTest
+class TranslationTest extends AbstractTestCase
 {
     /**
      * Тест на стандартный успешный перевод сообщения

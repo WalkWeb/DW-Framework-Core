@@ -6,14 +6,14 @@ namespace WalkWeb\NW\Traits;
 
 trait CollectionTrait
 {
-    public function key()
+    public function key(): mixed
     {
         return key($this->elements);
     }
 
-    public function next()
+    public function next(): void
     {
-        return next($this->elements);
+        next($this->elements);
     }
 
     public function rewind(): void

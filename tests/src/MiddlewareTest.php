@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\src;
 
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 use Tests\utils\ExampleMiddleware;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Response;
 
-class MiddlewareTest extends AbstractTest
+class MiddlewareTest extends AbstractTestCase
 {
     /**
      * @throws AppException

@@ -6,9 +6,9 @@ namespace Tests\src;
 
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Logger;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class LoggerTest extends AbstractTest
+class LoggerTest extends AbstractTestCase
 {
     /**
      * Тест на простое сохранение и получение логов

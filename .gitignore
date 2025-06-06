@@ -2,8 +2,11 @@
 /bin/
 /html/
 .idea/
+/var/
 
 composer.lock
 
 config.test.php
 config.local.php
+
+.phpunit.result.cache

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\src;
 
 use WalkWeb\NW\Runtime;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class RuntimeTest extends AbstractTest
+class RuntimeTest extends AbstractTestCase
 {
     public function testRuntime(): void
     {
@@ -21,7 +21,7 @@ class RuntimeTest extends AbstractTest
         // Что именно выведет заранее не предсказать, это может быть и "0 b" и, например "60.77 kb"
         self::assertIsString($runtime->getMemoryCostClipped());
         // Просто проверяем, что получена строка
-        self::assertRegExp('/Runtime: /', $runtime->getStatistic());
-        self::assertRegExp('/ ms, memory cost: /', $runtime->getStatistic());
+        self::assertMatchesRegularExpression('/Runtime: /', $runtime->getStatistic());
+        self::assertMatchesRegularExpression('/ ms, memory cost: /', $runtime->getStatistic());
     }
 }

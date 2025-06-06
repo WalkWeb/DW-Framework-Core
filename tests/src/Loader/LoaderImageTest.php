@@ -6,19 +6,19 @@ namespace Tests\src\Loader;
 
 use DateTime;
 use Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Loader\Image;
 use WalkWeb\NW\Loader\LoaderException;
 use WalkWeb\NW\Loader\LoaderImage;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class LoaderImageTest extends AbstractTest
+class LoaderImageTest extends AbstractTestCase
 {
     /**
-     * @dataProvider fileDataProvider
-     * @param array $data
      * @throws Exception
      */
+    #[DataProvider('fileDataProvider')]
     public function testLoaderImageSuccess(array $data): void
     {
         $image = $this->getLoader()->load($data);
@@ -35,11 +35,9 @@ class LoaderImageTest extends AbstractTest
     }
 
     /**
-     * @dataProvider successFilesDataProvider
-     * @param array $data
-     * @param array $expectedSize
      * @throws Exception
      */
+    #[DataProvider('successFilesDataProvider')]
     public function testLoaderMultipleImageSuccess(array $data, array $expectedSize): void
     {
         $images = $this->getLoader()->multipleLoad($data);
@@ -65,11 +63,9 @@ class LoaderImageTest extends AbstractTest
     /**
      * Тест на различные варианты невалидных данных из $request->getFiles()
      *
-     * @dataProvider failFilesDataProvider
-     * @param array $data
-     * @param string $expectedError
      * @throws Exception
      */
+    #[DataProvider('failFilesDataProvider')]
     public function testLoaderMultipleImageFail(array $data, string $expectedError): void
     {
         $this->expectException(LoaderException::class);
@@ -80,10 +76,9 @@ class LoaderImageTest extends AbstractTest
     /**
      * Тест на ситуацию, когда превышен лимит разово загружаемых картинок
      *
-     * @dataProvider successFilesDataProvider
-     * @param array $data
      * @throws Exception
      */
+    #[DataProvider('successFilesDataProvider')]
     public function testLoaderImagesFailMaxLimit(array $data): void
     {
         $this->expectException(LoaderException::class);
@@ -142,10 +137,9 @@ class LoaderImageTest extends AbstractTest
     }
 
     /**
-     * @dataProvider fileDataProvider
-     * @param array $data
      * @throws Exception
      */
+    #[DataProvider('fileDataProvider')]
     public function testLoaderImageFailMaxSize(array $data): void
     {
         $this->expectException(LoaderException::class);
@@ -154,10 +148,9 @@ class LoaderImageTest extends AbstractTest
     }
 
     /**
-     * @dataProvider fileDataProvider
-     * @param array $data
      * @throws Exception
      */
+    #[DataProvider('fileDataProvider')]
     public function testLoaderImageFailMaxWidth(array $data): void
     {
         $this->expectException(LoaderException::class);
@@ -166,10 +159,9 @@ class LoaderImageTest extends AbstractTest
     }
 
     /**
-     * @dataProvider fileDataProvider
-     * @param array $data
      * @throws Exception
      */
+    #[DataProvider('fileDataProvider')]
     public function testLoaderImageFailMaxHeight(array $data): void
     {
         $this->expectException(LoaderException::class);
@@ -180,11 +172,9 @@ class LoaderImageTest extends AbstractTest
     /**
      * Тесты на различные варианты невалидных данных о файле
      *
-     * @dataProvider invalidFileDataProvider
-     * @param array $data
-     * @param string $error
      * @throws Exception
      */
+    #[DataProvider('invalidFileDataProvider')]
     public function testLoaderImageInvalidFileData(array $data, string $error): void
     {
         $this->expectException(LoaderException::class);
@@ -234,7 +224,7 @@ class LoaderImageTest extends AbstractTest
         $this->getLoader()->load($data, 100000, 1000, 10, '/public/images/upload/', ['gif']);
     }
 
-    public function invalidFileDataProvider(): array
+    public static function invalidFileDataProvider(): array
     {
         return [
             [
@@ -290,7 +280,7 @@ class LoaderImageTest extends AbstractTest
         ];
     }
 
-    public function fileDataProvider(): array
+    public static function fileDataProvider(): array
     {
         return [
             [
@@ -307,7 +297,7 @@ class LoaderImageTest extends AbstractTest
         ];
     }
 
-    public function successFilesDataProvider(): array
+    public static function successFilesDataProvider(): array
     {
         return [
             [
@@ -349,7 +339,7 @@ class LoaderImageTest extends AbstractTest
         ];
     }
 
-    public function failFilesDataProvider(): array
+    public static function failFilesDataProvider(): array
     {
         return [
             [

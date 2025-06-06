@@ -8,9 +8,9 @@ use WalkWeb\NW\AppException;
 use WalkWeb\NW\Container;
 use WalkWeb\NW\Csrf;
 use WalkWeb\NW\Session;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class CsrfTest extends AbstractTest
+class CsrfTest extends AbstractTestCase
 {
     /**
      * Тест на генерацию csrf-токена

@@ -12,14 +12,14 @@ use WalkWeb\NW\Route\RouteCollection;
 use WalkWeb\NW\Route\Router;
 use ReflectionClass;
 use ReflectionException;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 use Tests\utils\ExampleHandler;
 use Tests\utils\InvalidMiddleware;
 use Tests\utils\Middleware1;
 use Tests\utils\Middleware2;
 use Tests\utils\Middleware3;
 
-class AppTest extends AbstractTest
+class AppTest extends AbstractTestCase
 {
     /**
      * @throws AppException
@@ -31,7 +31,7 @@ class AppTest extends AbstractTest
 
         $response = $app->handle($request);
 
-        self::assertRegExp('/example html content/', $response->getBody());
+        self::assertMatchesRegularExpression('/example html content/', $response->getBody());
         self::assertEquals(Response::OK, $response->getStatusCode());
     }
 
@@ -100,7 +100,6 @@ EOT;
 
     /**
      * @throws AppException
-     * @throws ReflectionException
      */
     public function testAppEmitError(): void
     {

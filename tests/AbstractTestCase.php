@@ -12,7 +12,7 @@ use WalkWeb\NW\Runtime;
 use WalkWeb\NW\Traits\StringTrait;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractTest extends TestCase
+abstract class AbstractTestCase extends TestCase
 {
     use StringTrait;
 
@@ -33,7 +33,16 @@ abstract class AbstractTest extends TestCase
         }
 
         $router = require __DIR__ . '/../routes/web.php';
+
         $this->app = new App($router, $this->getContainer());
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        //restore_error_handler();
+        restore_exception_handler();
     }
 
     /**

@@ -19,7 +19,7 @@ class AppException extends Exception
      * @param int $code
      * @param AppException|null $previous
      */
-    public function __construct(string $message, $code = Response::INTERNAL_SERVER_ERROR, AppException $previous = null)
+    public function __construct(string $message, int $code = Response::INTERNAL_SERVER_ERROR, ?AppException $previous = null)
     {
         set_exception_handler([$this, 'printException']);
         parent::__construct($message, $code, $previous);

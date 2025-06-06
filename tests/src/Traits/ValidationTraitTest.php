@@ -4,34 +4,28 @@ declare(strict_types=1);
 
 namespace Tests\src\Traits;
 
+use DateMalformedStringException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use DateTime;
 use Exception;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Traits\ValidationTrait;
 
-class ValidationTraitTest extends AbstractTest
+class ValidationTraitTest extends AbstractTestCase
 {
     use ValidationTrait;
 
     /**
-     * @dataProvider stringSuccessDataProvider
-     * @param array $data
-     * @param string $field
      * @throws AppException
      */
+    #[DataProvider('stringSuccessDataProvider')]
     public function testValidationStringSuccess(array $data, string $field): void
     {
         self::assertEquals($data[$field], self::string($data, $field, ''));
     }
 
-    /**
-     * @dataProvider stringFailDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @throws AppException
-     */
+    #[DataProvider('stringFailDataProvider')]
     public function testValidationStringFail(array $data, string $field, string $error): void
     {
         $this->expectException(AppException::class);
@@ -40,24 +34,15 @@ class ValidationTraitTest extends AbstractTest
     }
 
     /**
-     * @dataProvider stringMinMaxLengthSuccessDataProvider
-     * @param string $string
-     * @param int $min
-     * @param int $max
      * @throws AppException
      */
+    #[DataProvider('stringMinMaxLengthSuccessDataProvider')]
     public function testValidationStringMinMaxLengthSuccess(string $string, int $min, int $max): void
     {
         self::assertEquals($string, self::stringMinMaxLength($string, $min, $max, ''));
     }
 
-    /**
-     * @dataProvider stringMinMaxLengthFailDataProvider
-     * @param string $string
-     * @param int $min
-     * @param int $max
-     * @param string $error
-     */
+    #[DataProvider('stringMinMaxLengthFailDataProvider')]
     public function testValidationStringMinMaxLengthFail(string $string, int $min, int $max, string $error): void
     {
         $this->expectException(AppException::class);
@@ -66,23 +51,15 @@ class ValidationTraitTest extends AbstractTest
     }
 
     /**
-     * @dataProvider intSuccessDataProvider
-     * @param array $data
-     * @param string $field
      * @throws AppException
      */
+    #[DataProvider('intSuccessDataProvider')]
     public function testValidationIntSuccess(array $data, string $field): void
     {
         self::assertEquals($data[$field], self::int($data, $field, ''));
     }
 
-    /**
-     * @dataProvider intFailDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @throws AppException
-     */
+    #[DataProvider('intFailDataProvider')]
     public function testValidationIntFail(array $data, string $field, string $error): void
     {
         $this->expectException(AppException::class);
@@ -116,20 +93,15 @@ class ValidationTraitTest extends AbstractTest
     }
 
     /**
-     * @dataProvider emailSuccessDataProvider
-     * @param string $email
      * @throws AppException
      */
+    #[DataProvider('emailSuccessDataProvider')]
     public function testValidationEmailSuccess(string $email): void
     {
         self::assertEquals($email, self::email($email, ''));
     }
 
-    /**
-     * @dataProvider emailFailDataProvider
-     * @param string $email
-     * @param string $error
-     */
+    #[DataProvider('emailFailDataProvider')]
     public function testValidationEmailFail(string $email, string $error): void
     {
         $this->expectException(AppException::class);
@@ -146,13 +118,7 @@ class ValidationTraitTest extends AbstractTest
         self::assertFalse(self::bool(['field' => false], 'field', ''));
     }
 
-    /**
-     * @dataProvider boolFailDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @throws AppException
-     */
+    #[DataProvider('boolFailDataProvider')]
     public function testValidationBoolFail(array $data, string $field, string $error): void
     {
         $this->expectException(AppException::class);
@@ -161,24 +127,15 @@ class ValidationTraitTest extends AbstractTest
     }
 
     /**
-     * @dataProvider intMinMaxValueSuccessDataProvider
-     * @param int $value
-     * @param int $min
-     * @param int $max
      * @throws AppException
      */
+    #[DataProvider('intMinMaxValueSuccessDataProvider')]
     public function testValidationIntMinMaxValueSuccess(int $value, int $min, int $max): void
     {
         self::assertEquals($value, self::intMinMaxValue($value, $min, $max, 'error'));
     }
 
-    /**
-     * @dataProvider intMinMaxValueFailDataProvider
-     * @param int $value
-     * @param int $min
-     * @param int $max
-     * @param string $error
-     */
+    #[DataProvider('intMinMaxValueFailDataProvider')]
     public function testValidationIntMinMaxValueFail(int $value, int $min, int $max, string $error): void
     {
         $this->expectException(AppException::class);
@@ -187,23 +144,15 @@ class ValidationTraitTest extends AbstractTest
     }
 
     /**
-     * @dataProvider intOrFloatSuccessDataProvider
-     * @param array $data
-     * @param string $field
      * @throws AppException
      */
+    #[DataProvider('intOrFloatSuccessDataProvider')]
     public function testValidationIntOrFloatSuccess(array $data, string $field): void
     {
         self::assertEquals($data[$field], self::intOrFloat($data, $field, 'error'));
     }
 
-    /**
-     * @dataProvider intOrFloatFailDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @throws AppException
-     */
+    #[DataProvider('intOrFloatFailDataProvider')]
     public function testValidationIntOrFloatFail(array $data, string $field, string $error): void
     {
         $this->expectException(AppException::class);
@@ -211,24 +160,13 @@ class ValidationTraitTest extends AbstractTest
         self::intOrFloat($data, $field, $error);
     }
 
-    /**
-     * @dataProvider arraySuccessDataProvider
-     * @param array $data
-     * @param string $field
-     * @throws AppException
-     */
+    #[DataProvider('arraySuccessDataProvider')]
     public function testValidationArraySuccess(array $data, string $field): void
     {
         self::assertEquals($data[$field], self::array($data, $field, 'error'));
     }
 
-    /**
-     * @dataProvider arrayFailDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @throws AppException
-     */
+    #[DataProvider('arrayFailDataProvider')]
     public function testValidationArrayFail(array $data, string $field, string $error): void
     {
         $this->expectException(AppException::class);
@@ -237,25 +175,15 @@ class ValidationTraitTest extends AbstractTest
     }
 
     /**
-     * @dataProvider stringOrNullSuccessDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @param string|null $expected
      * @throws AppException
      */
+    #[DataProvider('stringOrNullSuccessDataProvider')]
     public function testValidationStringOrNullSuccess(array $data, string $field, string $error, ?string $expected): void
     {
         self::assertEquals($expected, self::stringOrNull($data, $field, $error));
     }
 
-    /**
-     * @dataProvider stringOrNullFailDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @throws AppException
-     */
+    #[DataProvider('stringOrNullFailDataProvider')]
     public function testValidationStringOrNullFail(array $data, string $field, string $error): void
     {
         $this->expectException(AppException::class);
@@ -263,37 +191,22 @@ class ValidationTraitTest extends AbstractTest
         self::stringOrNull($data, $field, $error);
     }
 
-    /**
-     * @dataProvider stringOrDefaultDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $default
-     * @param string $expected
-     */
+    #[DataProvider('stringOrDefaultDataProvider')]
     public function testValidationStringOrDefault(array $data, string $field, string $default, string $expected): void
     {
         self::assertEquals($expected, self::stringOrDefault($data, $field, $default));
     }
 
     /**
-     * @dataProvider uuidSuccessDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
      * @throws AppException
      */
+    #[DataProvider('uuidSuccessDataProvider')]
     public function testValidationUuidSuccess(array $data, string $field, string $error): void
     {
         self::assertEquals($data[$field], self::uuid($data, $field, $error));
     }
 
-    /**
-     * @dataProvider uuidFailDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @throws AppException
-     */
+    #[DataProvider('uuidFailDataProvider')]
     public function testValidationUuidFail(array $data, string $field, string $error): void
     {
         $this->expectException(AppException::class);
@@ -302,24 +215,16 @@ class ValidationTraitTest extends AbstractTest
     }
 
     /**
-     * @dataProvider dateSuccessDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @throws Exception
+     * @throws DateMalformedStringException
+     * @throws AppException
      */
+    #[DataProvider('dateSuccessDataProvider')]
     public function testValidationDateSuccess(array $data, string $field, string $error): void
     {
         self::assertEquals(new DateTime($data[$field]), self::date($data, $field, $error));
     }
 
-    /**
-     * @dataProvider dateFailDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @throws Exception
-     */
+    #[DataProvider('dateFailDataProvider')]
     public function testValidationDateFail(array $data, string $field, string $error): void
     {
         $this->expectException(AppException::class);
@@ -328,12 +233,10 @@ class ValidationTraitTest extends AbstractTest
     }
 
     /**
-     * @dataProvider dateOrNullSuccessDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string|null $expected
-     * @throws Exception
+     * @throws DateMalformedStringException
+     * @throws AppException
      */
+    #[DataProvider('dateOrNullSuccessDataProvider')]
     public function testValidationDateOrNullSuccess(array $data, string $field, ?string $expected = null): void
     {
         if ($expected === null) {
@@ -343,13 +246,7 @@ class ValidationTraitTest extends AbstractTest
         }
     }
 
-    /**
-     * @dataProvider dateFailDateOrNullProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @throws Exception
-     */
+    #[DataProvider('dateFailDateOrNullProvider')]
     public function testValidationDateOrNullFail(array $data, string $field, string $error): void
     {
         $this->expectException(AppException::class);
@@ -357,13 +254,7 @@ class ValidationTraitTest extends AbstractTest
         self::dateOrNull($data, $field, $error);
     }
 
-    /**
-     * @dataProvider uuidOrNullSuccessDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string|null $expected
-     * @throws AppException
-     */
+    #[DataProvider('uuidOrNullSuccessDataProvider')]
     public function testValidationUuidOrNullSuccess(array $data, string $field, ?string $expected): void
     {
         if ($expected === null) {
@@ -373,13 +264,7 @@ class ValidationTraitTest extends AbstractTest
         }
     }
 
-    /**
-     * @dataProvider uuidOrNullFailDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     * @throws AppException
-     */
+    #[DataProvider('uuidOrNullFailDataProvider')]
     public function testValidationUuidOrNullFail(array $data, string $field, string $error): void
     {
         $this->expectException(AppException::class);
@@ -388,12 +273,9 @@ class ValidationTraitTest extends AbstractTest
     }
 
     /**
-     * @dataProvider intOrNullSuccessDataProvider
-     * @param array $data
-     * @param string $field
-     * @param int|null $expected
      * @throws AppException
      */
+    #[DataProvider('intOrNullSuccessDataProvider')]
     public function testValidationIntOrNullSuccess(array $data, string $field, ?int $expected): void
     {
         if ($expected === null) {
@@ -403,12 +285,7 @@ class ValidationTraitTest extends AbstractTest
         }
     }
 
-    /**
-     * @dataProvider intOrNullFailDataProvider
-     * @param array $data
-     * @param string $field
-     * @param string $error
-     */
+    #[DataProvider('intOrNullFailDataProvider')]
     public function testValidationIntOrNullFail(array $data, string $field, string $error): void
     {
         $this->expectException(AppException::class);
@@ -419,7 +296,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function intMinMaxValueSuccessDataProvider(): array
+    public static function intMinMaxValueSuccessDataProvider(): array
     {
         return [
             [
@@ -443,7 +320,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function intMinMaxValueFailDataProvider(): array
+    public static function intMinMaxValueFailDataProvider(): array
     {
         return [
             [
@@ -470,7 +347,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function intOrFloatSuccessDataProvider(): array
+    public static function intOrFloatSuccessDataProvider(): array
     {
         return [
             [
@@ -503,7 +380,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function intOrFloatFailDataProvider(): array
+    public static function intOrFloatFailDataProvider(): array
     {
         return [
             [
@@ -530,7 +407,7 @@ class ValidationTraitTest extends AbstractTest
         ];
     }
 
-    public function arraySuccessDataProvider(): array
+    public static function arraySuccessDataProvider(): array
     {
         return [
             [
@@ -542,7 +419,7 @@ class ValidationTraitTest extends AbstractTest
         ];
     }
 
-    public function arrayFailDataProvider(): array
+    public static function arrayFailDataProvider(): array
     {
         return [
             [
@@ -562,7 +439,7 @@ class ValidationTraitTest extends AbstractTest
         ];
     }
 
-    public function stringOrNullSuccessDataProvider(): array
+    public static function stringOrNullSuccessDataProvider(): array
     {
         return [
             [
@@ -584,7 +461,7 @@ class ValidationTraitTest extends AbstractTest
         ];
     }
 
-    public function stringOrNullFailDataProvider(): array
+    public static function stringOrNullFailDataProvider(): array
     {
         return [
             [
@@ -602,7 +479,7 @@ class ValidationTraitTest extends AbstractTest
         ];
     }
 
-    public function stringOrDefaultDataProvider(): array
+    public static function stringOrDefaultDataProvider(): array
     {
         return [
             [
@@ -638,7 +515,7 @@ class ValidationTraitTest extends AbstractTest
         ];
     }
 
-    public function uuidSuccessDataProvider(): array
+    public static function uuidSuccessDataProvider(): array
     {
         return [
             [
@@ -651,7 +528,7 @@ class ValidationTraitTest extends AbstractTest
         ];
     }
 
-    public function uuidFailDataProvider(): array
+    public static function uuidFailDataProvider(): array
     {
         return [
             [
@@ -683,7 +560,7 @@ class ValidationTraitTest extends AbstractTest
         ];
     }
 
-    public function dateSuccessDataProvider(): array
+    public static function dateSuccessDataProvider(): array
     {
         return [
             [
@@ -696,7 +573,7 @@ class ValidationTraitTest extends AbstractTest
         ];
     }
 
-    public function dateFailDataProvider(): array
+    public static function dateFailDataProvider(): array
     {
         return [
             [
@@ -732,7 +609,7 @@ class ValidationTraitTest extends AbstractTest
      * @return array
      * @throws AppException
      */
-    public function stringSuccessDataProvider(): array
+    public static function stringSuccessDataProvider(): array
     {
         return [
             [
@@ -750,7 +627,7 @@ class ValidationTraitTest extends AbstractTest
         ];
     }
 
-    public function stringFailDataProvider(): array
+    public static function stringFailDataProvider(): array
     {
         return [
             [
@@ -774,7 +651,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function stringMinMaxLengthSuccessDataProvider(): array
+    public static function stringMinMaxLengthSuccessDataProvider(): array
     {
         return [
             [
@@ -798,7 +675,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function stringMinMaxLengthFailDataProvider(): array
+    public static function stringMinMaxLengthFailDataProvider(): array
     {
         return [
             [
@@ -826,7 +703,7 @@ class ValidationTraitTest extends AbstractTest
      * @return array
      * @throws Exception
      */
-    public function intSuccessDataProvider(): array
+    public static function intSuccessDataProvider(): array
     {
         return [
             [
@@ -847,7 +724,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function intFailDataProvider(): array
+    public static function intFailDataProvider(): array
     {
         return [
             [
@@ -871,7 +748,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function emailSuccessDataProvider(): array
+    public static function emailSuccessDataProvider(): array
     {
         return [
             [
@@ -889,7 +766,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function emailFailDataProvider(): array
+    public static function emailFailDataProvider(): array
     {
         return [
             [
@@ -910,7 +787,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function boolFailDataProvider(): array
+    public static function boolFailDataProvider(): array
     {
         return [
             [
@@ -934,7 +811,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function dateOrNullSuccessDataProvider(): array
+    public static function dateOrNullSuccessDataProvider(): array
     {
         return [
             [
@@ -957,7 +834,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function dateFailDateOrNullProvider(): array
+    public static function dateFailDateOrNullProvider(): array
     {
         return [
             // miss field
@@ -988,7 +865,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function uuidOrNullSuccessDataProvider(): array
+    public static function uuidOrNullSuccessDataProvider(): array
     {
         return [
             [
@@ -1011,7 +888,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function uuidOrNullFailDataProvider(): array
+    public static function uuidOrNullFailDataProvider(): array
     {
         return [
             // miss field
@@ -1042,7 +919,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function intOrNullSuccessDataProvider(): array
+    public static function intOrNullSuccessDataProvider(): array
     {
         return [
             [
@@ -1065,7 +942,7 @@ class ValidationTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function intOrNullFailDataProvider(): array
+    public static function intOrNullFailDataProvider(): array
     {
         return [
             // miss field

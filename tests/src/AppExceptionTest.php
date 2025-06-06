@@ -9,9 +9,9 @@ use WalkWeb\NW\Container;
 use WalkWeb\NW\Response;
 use WalkWeb\NW\Route\RouteCollection;
 use WalkWeb\NW\Route\Router;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class AppExceptionTest extends AbstractTest
+class AppExceptionTest extends AbstractTestCase
 {
     public function testAppExceptionCreate(): void
     {
@@ -21,6 +21,8 @@ class AppExceptionTest extends AbstractTest
         self::assertEquals($defaultMessage, $default->getMessage());
         self::assertEquals(Response::INTERNAL_SERVER_ERROR, $default->getCode());
         self::assertNull($default->getPrevious());
+
+        restore_exception_handler();
 
         // custom
         $custom = new AppException($customMessage = 'custom message', Response::BAD_GATEWAY, $default);
@@ -76,7 +78,7 @@ EOT;
         $e->printException($e, Container::APP_DEV);
         $content = ob_get_clean();
 
-        self::assertRegExp('/Ошибка/', $content);
-        self::assertRegExp('/Файл/', $content);
+        self::assertMatchesRegularExpression('/Ошибка/', $content);
+        self::assertMatchesRegularExpression('/Файл/', $content);
     }
 }

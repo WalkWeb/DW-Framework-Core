@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\src\Traits;
 
 use WalkWeb\NW\Traits\PaginationTrait;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class PaginationTraitTest extends AbstractTest
+class PaginationTraitTest extends AbstractTestCase
 {
     use PaginationTrait;
 

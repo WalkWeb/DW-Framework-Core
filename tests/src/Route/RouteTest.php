@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\src\Route;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use WalkWeb\NW\Request;
 use WalkWeb\NW\Route\Route;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class RouteTest extends AbstractTest
+class RouteTest extends AbstractTestCase
 {
     /**
      * Тест на создание маршрута
@@ -39,17 +40,8 @@ class RouteTest extends AbstractTest
 
     /**
      * Тесты на совпадение маршрута
-     *
-     * @dataProvider matchDataProvider
-     * @param Request $request
-     * @param string $name
-     * @param string $path
-     * @param string $handler
-     * @param string $method
-     * @param array $params
-     * @param string $namespace
-     * @param array|null $expectedResult
      */
+    #[DataProvider('matchDataProvider')]
     public function testRouteMatch(
         Request $request,
         string $name,
@@ -68,7 +60,7 @@ class RouteTest extends AbstractTest
     /**
      * @return array
      */
-    public function matchDataProvider(): array
+    public static function matchDataProvider(): array
     {
         $baseRequest = new Request([]);
         $postRequest = new Request(['REQUEST_URI' => '/post/10']);

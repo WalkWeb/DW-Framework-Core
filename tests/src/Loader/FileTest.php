@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\src\Loader;
 
 use WalkWeb\NW\Loader\File;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class FileTest extends AbstractTest
+class FileTest extends AbstractTestCase
 {
     public function testFileCreate(): void
     {

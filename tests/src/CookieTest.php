@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\src;
 
 use WalkWeb\NW\Cookie;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class CookieTest extends AbstractTest
+class CookieTest extends AbstractTestCase
 {
     public function testCookieSetUpdateDelete(): void
     {

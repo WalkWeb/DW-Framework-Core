@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\src\Loader;
 
-use Tests\AbstractTest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\AbstractTestCase;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Loader\Image;
 use WalkWeb\NW\Loader\LoaderException;
 use WalkWeb\NW\Loader\SimpleImageResizer;
 
-class SimpleImageResizerTest extends AbstractTest
+class SimpleImageResizerTest extends AbstractTestCase
 {
     /**
-     * @dataProvider successDataProvider
-     * @param Image $image
      * @throws AppException
      */
+    #[DataProvider('successDataProvider')]
     public function testSimpleImageResizerSuccess(Image $image): void
     {
         $resizeImagePath = SimpleImageResizer::resize($image, 300, 300);
@@ -54,7 +54,7 @@ class SimpleImageResizerTest extends AbstractTest
     /**
      * @return array
      */
-    public function successDataProvider(): array
+    public static function successDataProvider(): array
     {
         return [
             // jpeg
@@ -112,4 +112,28 @@ class SimpleImageResizerTest extends AbstractTest
 
         return new Image($name, $type, $size, $width, $height, $absoluteFilePath, $filePath);
     }
+
+    private function activeExceptionHandlers(): array
+    {
+        $res = [];
+
+        while (true) {
+            $previousHandler = set_exception_handler(static fn () => null);
+            restore_exception_handler();
+
+            if ($previousHandler === null) {
+                break;
+            }
+            $res[] = $previousHandler;
+            restore_exception_handler();
+        }
+        $res = array_reverse($res);
+
+        foreach ($res as $handler) {
+            set_exception_handler($handler);
+        }
+
+        return $res;
+    }
+
 }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\src\Loader;
 
 use WalkWeb\NW\Loader\Image;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class ImageTest extends AbstractTest
+class ImageTest extends AbstractTestCase
 {
     public function testImageCreate(): void
     {

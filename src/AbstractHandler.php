@@ -77,11 +77,11 @@ abstract class AbstractHandler
      *
      * @param string $view
      * @param array $params
-     * @param int|null $statusCode
+     * @param int $statusCode
      * @return Response
      * @throws AppException
      */
-    public function render(string $view, $params = [], int $statusCode = null): Response
+    public function render(string $view, array $params = [], int $statusCode = Response::OK): Response
     {
         extract($params, EXTR_OVERWRITE);
 

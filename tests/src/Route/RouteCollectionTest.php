@@ -4,24 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\src\Route;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use WalkWeb\NW\Route\Route;
 use WalkWeb\NW\Route\RouteCollection;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class RouteCollectionTest extends AbstractTest
+class RouteCollectionTest extends AbstractTestCase
 {
     /**
      * Тест на создание маршрутов через методы в коллекции get(), post(), put(), delete()
-     *
-     * @dataProvider createDataProvider
-     * @param string $method
-     * @param string $expectedMethod
-     * @param string $name
-     * @param string $path
-     * @param string $handler
-     * @param array $param
-     * @param string $namespace
      */
+    #[DataProvider('createDataProvider')]
     public function testRouteCollectionCreate(
         string $method,
         string $expectedMethod,
@@ -74,7 +67,7 @@ class RouteCollectionTest extends AbstractTest
      *
      * @return array[]
      */
-    public function createDataProvider(): array
+    public static function createDataProvider(): array
     {
         return [
             [

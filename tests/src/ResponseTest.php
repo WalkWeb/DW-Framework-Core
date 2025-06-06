@@ -6,9 +6,9 @@ namespace Tests\src;
 
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Response;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class ResponseTest extends AbstractTest
+class ResponseTest extends AbstractTestCase
 {
     /**
      * Тест на создание Response с параметрами по умолчанию

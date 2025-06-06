@@ -6,9 +6,9 @@ namespace Tests\src;
 
 use WalkWeb\NW\Cookie;
 use WalkWeb\NW\Request;
-use Tests\AbstractTest;
+use Tests\AbstractTestCase;
 
-class RequestTest extends AbstractTest
+class RequestTest extends AbstractTestCase
 {
     public function testCreateEmptyRequest(): void
     {

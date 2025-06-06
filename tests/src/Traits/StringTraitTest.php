@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Tests\src\Traits;
 
 use Exception;
-use Tests\AbstractTest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\AbstractTestCase;
 use WalkWeb\NW\AppException;
 
-class StringTraitTest extends AbstractTest
+class StringTraitTest extends AbstractTestCase
 {
     /**
      * Тест на генерацию случайной строки указанной длинны
@@ -54,22 +55,18 @@ class StringTraitTest extends AbstractTest
     }
 
     /**
-     * @dataProvider jsonEncodeDataProvider
-     * @param array $data
-     * @param string $expectedJson
      * @throws AppException
      */
+    #[DataProvider('jsonEncodeDataProvider')]
     public function testStringTraitJsonEncodeSuccess(array $data, string $expectedJson): void
     {
         self::assertEquals($expectedJson, self::jsonEncode($data));
     }
 
     /**
-     * @dataProvider jsonDecodeDataProvider
-     * @param string $json
-     * @param array $expectedArray
      * @throws AppException
      */
+    #[DataProvider('jsonDecodeDataProvider')]
     public function testStringTraitJsonDecodeSuccess(string $json, array $expectedArray): void
     {
         self::assertEquals($expectedArray, self::jsonDecode($json));
@@ -85,7 +82,7 @@ class StringTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function jsonEncodeDataProvider(): array
+    public static function jsonEncodeDataProvider(): array
     {
         return [
             [
@@ -114,7 +111,7 @@ class StringTraitTest extends AbstractTest
     /**
      * @return array
      */
-    public function jsonDecodeDataProvider(): array
+    public static function jsonDecodeDataProvider(): array
     {
         return [
             [
