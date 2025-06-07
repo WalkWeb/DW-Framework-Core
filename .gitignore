@@ -10,3 +10,4 @@ config.test.php
 config.local.php
 
 .phpunit.result.cache
+.php-cs-fixer.cache

@@ -320,7 +320,7 @@ class Validator
     private function addError(string $error): void
     {
         if ($this->defaultError) {
-            $this->errors[] =$this->defaultError;
+            $this->errors[] = $this->defaultError;
         } else {
             $this->errors[] = $error;
         }

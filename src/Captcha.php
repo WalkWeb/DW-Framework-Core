@@ -31,8 +31,8 @@ class Captcha
         int $heightImage = 50,
         string $letters = '1234567890',
         int $length = 4,
-        int $fontSize = 28): string
-    {
+        int $fontSize = 28
+    ): string {
         try {
             $image = imagecreatetruecolor($widthImage, $heightImage);
             $imageColor = imagecolorallocate($image, 30, 25, 21);

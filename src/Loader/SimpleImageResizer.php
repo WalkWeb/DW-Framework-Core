@@ -35,8 +35,7 @@ class SimpleImageResizer
         int $maxHeight,
         int $quality = self::QUALITY,
         string $directory = self::DIRECTORY
-    ): string
-    {
+    ): string {
         try {
             if ($image->getWidth() <= $maxWidth && $image->getHeight() <= $maxHeight) {
                 return $image->getFilePath();

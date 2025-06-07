@@ -20,8 +20,7 @@ trait PaginationTrait
         string $url,
         int $perPage = 5,
         string $onClick = ''
-    ): string
-    {
+    ): string {
         $numberPage = (int)ceil($elements / $perPage);
         $content = '';
         $left = '';

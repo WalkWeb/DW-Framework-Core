@@ -80,8 +80,7 @@ class Request
         array $cookies = [],
         array $query = [],
         array $files = []
-    ): Request
-    {
+    ): Request {
         return new self(
             $server ?: $_SERVER,
             $body ?: $_POST,
@@ -236,6 +235,10 @@ class Request
     }
 
     // Функционал этих методов не нужен, но на их отсутствие ругается phpStorm
-    public function __set($name, $value) {}
-    public function __isset($name) {}
+    public function __set($name, $value)
+    {
+    }
+    public function __isset($name)
+    {
+    }
 }

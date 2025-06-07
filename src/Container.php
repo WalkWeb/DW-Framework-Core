@@ -77,8 +77,7 @@ class Container
         string $template,
         string $translateDir,
         string $language
-    )
-    {
+    ) {
         $this->setAppEnv($appEnv);
         $this->dbConfigs = $dbConfigs;
         $this->mailerConfig = $mailerConfig;
@@ -119,8 +118,7 @@ class Container
         string $template = TEMPLATE_DEFAULT,
         string $translateDir = TRANSLATE_DIR,
         string $language = LANGUAGE
-    ): self
-    {
+    ): self {
         return new self(
             $appEnv,
             $dbConfigs,

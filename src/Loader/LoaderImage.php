@@ -56,8 +56,7 @@ class LoaderImage
         int $maxHeight = self::IMAGE_MAX_HEIGHT,
         string $directory = self::DIRECTORY,
         array $fileExtension = self::FILE_EXTENSION
-    ): Image
-    {
+    ): Image {
         $this->validate($files);
         $filePath = $files['file']['tmp_name'];
         $this->checkError($files['file']['error']);
@@ -86,8 +85,7 @@ class LoaderImage
         string $directory = self::DIRECTORY,
         array $fileExtension = self::FILE_EXTENSION,
         int $limitImages = self::LIMIT_IMAGES
-    ): ImageCollection
-    {
+    ): ImageCollection {
         $this->multipleValidate($files);
         $loadImages = new ImageCollection();
         $data = [];

@@ -36,8 +36,7 @@ class Translation
         ?string $language = null,
         ?array $messages = null,
         ?string $defaultLanguage = null
-    )
-    {
+    ) {
         $this->container = $container;
 
         if ($defaultLanguage === null) {

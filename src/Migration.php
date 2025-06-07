@@ -89,7 +89,7 @@ class ' . $className . '
 
         foreach ($migrationsForRun as $migrationForRun) {
             $className = 'Migrations\\' . pathinfo($migrationForRun, PATHINFO_FILENAME);
-            $migration = new $className;
+            $migration = new $className();
             $migration->run($this->container->getConnectionPool());
             $this->container->getConnectionPool()->getConnection()->query("INSERT INTO " . self::TABLE_NAME . " (version) VALUES ('$migrationForRun')");
         }
