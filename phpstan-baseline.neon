@@ -1,0 +1,5 @@
+parameters:
+	ignoreErrors: []
+
+includes:
+	- phpstan-baseline.neon

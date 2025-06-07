@@ -106,7 +106,7 @@ class Request
         $this->server = $server;
 
         // Такая обработка URI позволяет принимать запросы вида /registration?ref=friend, на маршрут /registration
-        // Но лично я подумываю отказаться от GET-параметров в URL в принципе
+        // Но подумываю отказаться от GET-параметров в URL в принципе
         $this->uri = !empty($server['REQUEST_URI']) ?
             explode('?', $server['REQUEST_URI'])[0]
             : '/';
@@ -212,7 +212,7 @@ class Request
      * @param null $default
      * @return mixed|null
      */
-    public function getAttribute($attribute, $default = null)
+    public function getAttribute($attribute, $default = null): mixed
     {
         if (!array_key_exists($attribute, $this->attributes)) {
             return $default;
@@ -232,13 +232,5 @@ class Request
     public function __get(string $name)
     {
         return $this->body[$name] ?? $this->attributes[$name] ?? $this->query[$name] ?? null;
-    }
-
-    // Функционал этих методов не нужен, но на их отсутствие ругается phpStorm
-    public function __set($name, $value)
-    {
-    }
-    public function __isset($name)
-    {
     }
 }

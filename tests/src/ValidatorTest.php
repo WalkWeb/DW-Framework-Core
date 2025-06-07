@@ -199,7 +199,7 @@ class ValidatorTest extends AbstractTestCase
             'unique',
         ];
 
-        self::assertFalse($validator->check('param', 'InvalidLogin&', $rules, null, null, $error));
+        self::assertFalse($validator->check('param', 'InvalidLogin&', $rules, '', '', $error));
         self::assertEquals($error, $validator->getError());
     }
 }

@@ -69,14 +69,14 @@ class Validator
      * @param string $name        - Имя поля, необходимо для корректного сообщения об ошибке
      * @param $param              - Валидируемая переменная
      * @param array $rules        - Правила валидации
-     * @param string|null $databaseAndTable  - Только для проверки типа unique - база/таблица для проверки
-     * @param string|null $column - Только для проверки типа unique - колонка для проверки
-     * @param string|null $error  - Текст ошибки, если он не указан - то текст ошибки будет составлен автоматически
+     * @param string $databaseAndTable  - Только для проверки типа unique - база/таблица для проверки
+     * @param string $column - Только для проверки типа unique - колонка для проверки
+     * @param string $error  - Текст ошибки, если он не указан - то текст ошибки будет составлен автоматически
      * @return bool
      * @throws AppException
      * @uses string, int, min, max, required, boolean, in, parent, unique, mail
      */
-    public function check(string $name, $param, array $rules, string $databaseAndTable = null, string $column = null, string $error = null): bool
+    public function check(string $name, $param, array $rules, string $databaseAndTable = '', string $column = '', string $error = ''): bool
     {
         $this->name = $name;
         $this->errors = [];

@@ -6,9 +6,12 @@ namespace WalkWeb\NW\Loader;
 
 use Countable;
 use Iterator;
+use WalkWeb\NW\Traits\CollectionTrait;
 
 class ImageCollection implements Iterator, Countable
 {
+    use CollectionTrait;
+
     /** @var Image[] */
     private array $elements;
 
@@ -18,31 +21,6 @@ class ImageCollection implements Iterator, Countable
     {
         $this->elements[] = $image;
         $this->totalSize += $image->getSize();
-    }
-
-    public function key()
-    {
-        return key($this->elements);
-    }
-
-    public function next()
-    {
-        return next($this->elements);
-    }
-
-    public function rewind(): void
-    {
-        reset($this->elements);
-    }
-
-    public function valid(): bool
-    {
-        return key($this->elements) !== null;
-    }
-
-    public function count(): int
-    {
-        return count($this->elements);
     }
 
     public function current(): Image
