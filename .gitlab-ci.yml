@@ -1,0 +1,35 @@
+
+image: walkweb/php-8.4-framework
+
+cache:
+  paths:
+    - vendor/
+
+before_script:
+  - cp .env.example .env
+
+stages:
+  - build
+  - static analysis
+  - tests
+
+composer install:
+  stage: build
+  script:
+    - composer install
+
+code style:
+  stage: static analysis
+  script:
+    - PHP_CS_FIXER_IGNORE_ENV=1 php vendor/bin/php-cs-fixer check src
+
+phpstan:
+  stage: static analysis
+  script:
+    - php -d memory_limit=512M vendor/bin/phpstan analyse src
+
+unit tests:
+  stage: tests
+  script:
+    - cp .env.example .env.test
+    - APP_ENV=test php vendor/bin/phpunit
