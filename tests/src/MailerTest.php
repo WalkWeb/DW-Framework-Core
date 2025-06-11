@@ -20,7 +20,7 @@ class MailerTest extends AbstractTestCase
      */
     public function testMailerSendSuccess(): void
     {
-        $mailer = new Mailer($this->getContainer(), MAIL_CONFIG);
+        $mailer = new Mailer($this->getContainer(), $this->getMailConfig());
         $mailer->send('mail@mail.com', 'Hello!', 'Message');
 
         // Если никакой ошибки не произошло - считаем, что все ок
@@ -34,7 +34,7 @@ class MailerTest extends AbstractTestCase
      */
     public function testMailerInvalidEmail(): void
     {
-        $mailer = new Mailer($this->getContainer(), MAIL_CONFIG);
+        $mailer = new Mailer($this->getContainer(), $this->getMailConfig());
 
         $this->expectException(AppException::class);
         $this->expectExceptionMessage('Invalid address:  (to): invalid_email');
@@ -198,6 +198,21 @@ class MailerTest extends AbstractTestCase
                 ],
                 Mailer::ERROR_INVALID_FROM,
             ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getMailConfig(): array
+    {
+        return [
+            'smtp_host'     => 'smtp_host',
+            'smtp_port'     => 465,
+            'smtp_auth'     => true,
+            'smtp_user'     => 'smtp_user',
+            'smtp_password' => 'smtp_password',
+            'from'          => 'mail@mail.com',
         ];
     }
 }

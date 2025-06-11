@@ -8,8 +8,6 @@ class Captcha
 {
     private Container $container;
 
-    public const INVALID_CAPTCHA = 'Символы с картинки указаны неверно';
-
     private string $captcha = '';
 
     public function __construct(Container $container)
@@ -37,7 +35,7 @@ class Captcha
             $image = imagecreatetruecolor($widthImage, $heightImage);
             $imageColor = imagecolorallocate($image, 30, 25, 21);
             imagefilledrectangle($image, 0, 0, 400, 50, $imageColor);
-            $font = DIR . '/public/fonts/11610.ttf';
+            $font = $this->container->getRootDir() . '/public/fonts/11610.ttf';
             $height = 40;
 
             for ($i = 0; $i < $length; $i++) {
@@ -64,7 +62,7 @@ class Captcha
                 imagettftext($image, $fontSize, $angle, $x, $y, $color, $font, $this->captcha[$i]);
             }
 
-            Session::setParam('captcha', md5($this->captcha . KEY));
+            Session::setParam('captcha', md5($this->captcha . $this->container->getSecretKey()));
 
             ob_start();
             imagepng($image);
@@ -88,7 +86,7 @@ class Captcha
             return true;
         }
 
-        return md5($captcha . KEY) === Session::getParam('captcha');
+        return md5($captcha . $this->container->getSecretKey()) === Session::getParam('captcha');
     }
 
     /**

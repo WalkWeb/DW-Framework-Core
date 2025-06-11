@@ -9,9 +9,9 @@ class Csrf
 {
     use StringTrait;
 
-    private Container $container;
+    public const string TOKEN_NAME = 'csrf';
 
-    public const TOKEN_NAME = 'csrf';
+    private Container $container;
 
     public function __construct(Container $container)
     {

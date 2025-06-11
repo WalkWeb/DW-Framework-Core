@@ -7,7 +7,7 @@ use WalkWeb\NW\Request;
 
 class Router
 {
-    public const ERROR_MISS_ROUTE = 'Route not found';
+    public const string ERROR_MISS_ROUTE = 'Route not found';
 
     private RouteCollection $routes;
 

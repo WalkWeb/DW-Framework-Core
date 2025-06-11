@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\src;
 
+use Dotenv\Dotenv;
 use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 use WalkWeb\NW\AppException;
@@ -22,55 +23,70 @@ use Tests\AbstractTestCase;
 
 class ContainerTest extends AbstractTestCase
 {
+    private const string PATH = __DIR__ . '/../../';
+
     /**
      * @throws AppException
      */
-    public function testContainerCreate(): void
+    #[DataProvider('createDataProvider')]
+    public function testContainerCreate(array $dbConfig, array $smtpConfig): void
     {
         // create default
-        $container = Container::create();
+        $container = Container::create(self::PATH);
+
+        $saveLog = false;
+        $logDir = self::PATH;
 
         self::assertEquals(
-            new ConnectionPool($container, DB_CONFIGS),
+            new ConnectionPool($container, $dbConfig),
             $container->getConnectionPool()
         );
         self::assertEquals(
-            new Logger(SAVE_LOG, LOG_DIR),
+            new Logger($saveLog, $logDir),
             $container->getLogger()
         );
         self::assertEquals(new Csrf($container), $container->getCsrf());
         self::assertEquals(new Captcha($container), $container->getCaptcha());
         self::assertEquals(new Validator($container), $container->getValidator());
-        self::assertEquals(CACHE_DIR, $container->getCacheDir());
-        self::assertEquals(VIEW_DIR, $container->getViewDir());
-        self::assertEquals(MIGRATION_DIR, $container->getMigrationDir());
-        self::assertEquals(APP_ENV, $container->getAppEnv());
+        self::assertEquals(self::PATH . 'cache', $container->getCacheDir());
+        self::assertEquals(self::PATH . 'views/', $container->getViewDir());
+        self::assertEquals(self::PATH . 'migrations/', $container->getMigrationDir());
+        self::assertEquals(self::PATH . 'translations/', $container->getTranslateDir());
+        self::assertEquals('test', $container->getAppEnv());
 
         // create manually
         $appEnv = Container::APP_PROD;
-        $loggerSaveLog = false;
+        $secretKey = 'secret_key';
+        $rootDir = 'root_dir';
         $loggerDir = 'logger_dir';
         $cacheDir = 'cache_dir';
         $viewDir = 'view_dir';
         $migrationDir = 'migration_dir';
         $template = 'template';
         $translateDir = 'translate_dir';
+        $language = 'en';
 
-        $container = Container::create(
+        $container = new Container(
             $appEnv,
-            DB_CONFIGS,
-            MAIL_CONFIG,
-            $loggerSaveLog,
+            $rootDir,
+            $secretKey,
+            $dbConfig,
+            $smtpConfig,
+            $saveLog,
             $loggerDir,
             $cacheDir,
             $viewDir,
             $migrationDir,
             $template,
             $translateDir,
+            $language
         );
 
+        self::assertEquals($appEnv, $container->getAppEnv());
+        self::assertEquals($rootDir, $container->getRootDir());
+        self::assertEquals($secretKey, $container->getSecretKey());
         self::assertEquals(
-            new Logger($loggerSaveLog, $loggerDir),
+            new Logger($saveLog, $loggerDir),
             $container->getLogger()
         );
         self::assertEquals(new Csrf($container), $container->getCsrf());
@@ -91,7 +107,7 @@ class ContainerTest extends AbstractTestCase
      */
     public function testContainerSetService(): void
     {
-        $logger = new Logger(SAVE_LOG, LOG_DIR);
+        $logger = new Logger(false, 'xxx');
         $logger->addLog('abc');
 
         $container = $this->getContainer();
@@ -244,7 +260,7 @@ class ContainerTest extends AbstractTestCase
         $translation = $container->getTranslation();
         self::assertInstanceOf(Translation::class, $translation);
 
-        self::assertEquals(LANGUAGE, $translation->getLanguage());
+        self::assertEquals('ru', $translation->getLanguage());
     }
 
     /**
@@ -315,7 +331,7 @@ class ContainerTest extends AbstractTestCase
     #[DataProvider('getServiceErrorDataProvider')]
     public function testContainerGetServiceFail(string $class, string $error): void
     {
-        $container = Container::create();
+        $container = Container::create(self::PATH);
 
         $this->expectException(AppException::class);
         $this->expectExceptionMessage($error);
@@ -330,7 +346,7 @@ class ContainerTest extends AbstractTestCase
     #[DataProvider('getMethodServiceErrorDataProvider')]
     public function testContainerGetMethodServiceFail(string $method, string $error): void
     {
-        $container = Container::create();
+        $container = Container::create(self::PATH);
 
         $this->expectException(AppException::class);
         $this->expectExceptionMessage($error);
@@ -366,9 +382,9 @@ class ContainerTest extends AbstractTestCase
      */
     public function testContainerSetTemplate(): void
     {
-        $container = Container::create();
+        $container = Container::create(self::PATH);
 
-        self::assertEquals(TEMPLATE_DEFAULT, $container->getTemplate());
+        self::assertEquals('default', $container->getTemplate());
 
         $template = 'new_template';
         $container->setTemplate($template);
@@ -407,6 +423,33 @@ class ContainerTest extends AbstractTestCase
     public function testContainerNoExistService(): void
     {
         self::assertFalse($this->getContainer()->exist('UnknownService'));
+    }
+
+    /**
+     * @return array
+     */
+    public static function createDataProvider(): array
+    {
+        return [
+            [
+                [
+                    'default' => [
+                        'host'     => 'HOST',
+                        'user'     => 'YOUR_DB_USER_NAME',
+                        'password' => 'YOUR_DB_PASSWORD',
+                        'database' => 'DATABASE',
+                    ],
+                ],
+                [
+                    'smtp_host'     => 'smtp_host',
+                    'smtp_port'     => 465,
+                    'smtp_auth'     => true,
+                    'smtp_user'     => 'smtp_user',
+                    'smtp_password' => 'smtp_password',
+                    'from'          => 'mail@mail.com',
+                ],
+            ],
+        ];
     }
 
     /**

@@ -7,13 +7,10 @@ use WalkWeb\NW\Route\Router;
 
 class App
 {
-    public const ERROR_MISS_CONTAINER     = 'The emit method cannot be called before the App is created';
-    public const ERROR_MISS_HANDLER       = 'Handler missing: %s';
-    public const ERROR_MISS_MIDDLEWARE    = 'Middleware missing: %s';
-    public const ERROR_INVALID_MIDDLEWARE = 'Invalid middleware class: %s, expected extends AbstractMiddleware';
-
-    public const TEMPLATE_500_PAGE        = '/' . TEMPLATE_DEFAULT . '/errors/500.php';
-    public const TEMPLATE_404_PAGE        = '/' . TEMPLATE_DEFAULT . '/errors/404.php';
+    public const string ERROR_MISS_CONTAINER     = 'The emit method cannot be called before the App is created';
+    public const string ERROR_MISS_HANDLER       = 'Handler missing: %s';
+    public const string ERROR_MISS_MIDDLEWARE    = 'Middleware missing: %s';
+    public const string ERROR_INVALID_MIDDLEWARE = 'Invalid middleware class: %s, expected extends AbstractMiddleware';
 
     private Router $router;
     private array $middleware;
@@ -70,7 +67,7 @@ class App
             throw new AppException(self::ERROR_MISS_CONTAINER);
         }
 
-        $view = self::$container->getViewDir() . self::TEMPLATE_500_PAGE;
+        $view = self::$container->getViewDir() . '/' . self::$container->getTemplate() . '/errors/500.php';
         $content = file_exists($view) ? file_get_contents($view) : Response::DEFAULT_500_ERROR;
         return new Response($content, Response::INTERNAL_SERVER_ERROR);
     }
@@ -81,7 +78,11 @@ class App
      */
     private function createNotFoundPage(): Response
     {
-        $view = self::$container->getViewDir() . self::TEMPLATE_404_PAGE;
+        if (self::$container === null) {
+            throw new AppException(self::ERROR_MISS_CONTAINER);
+        }
+
+        $view = self::$container->getViewDir() . '/' . self::$container->getTemplate() . '/errors/404.php';
         $content = file_exists($view) ? file_get_contents($view) : Response::DEFAULT_404_ERROR;
         return new Response($content, Response::NOT_FOUND);
     }

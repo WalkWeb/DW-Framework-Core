@@ -443,6 +443,6 @@ class LoaderImageTest extends AbstractTestCase
      */
     private function getAbsoluteFilePath(string $filePath): string
     {
-        return substr($this->dir, 0, -5) . 'public' . $filePath;
+        return $this->dir . '/../public' . $filePath;
     }
 }

@@ -29,12 +29,12 @@ class AppException extends Exception
      * Выводим сообщение об ошибке. Если сайт не в режиме разработчика - отдается 500 ошибка
      *
      * @param Throwable $e
-     * @param string|null $appEnv
+     * @param string $appEnv
      * @throws AppException
      */
-    public function printException(Throwable $e, ?string $appEnv = null): void
+    public function printException(Throwable $e, string $appEnv = ''): void
     {
-        $appEnv = $appEnv ?? APP_ENV;
+        $appEnv = $appEnv ?? $_ENV['APP_ENV'] ?? Container::APP_PROD;
 
         if ($appEnv === Container::APP_DEV) {
             $response = new Response(

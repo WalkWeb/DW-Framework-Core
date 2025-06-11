@@ -8,17 +8,25 @@ use DateTime;
 use Exception;
 use Gumlet\ImageResize;
 use WalkWeb\NW\AppException;
+use WalkWeb\NW\Container;
 use WalkWeb\NW\Traits\StringTrait;
 
 class SimpleImageResizer
 {
     use StringTrait;
 
-    public const DIRECTORY       = '/public/images/upload/';
-    public const FRONT_DIRECTORY = '/images/upload/';
-    public const QUALITY         = 80;
-    public const NAME_LENGTH     = 10;
-    public const EXTENSION       = '.jpg';
+    public const string DIRECTORY       = '/public/images/upload/';
+    public const string FRONT_DIRECTORY = '/images/upload/';
+    public const int QUALITY            = 80;
+    public const int NAME_LENGTH        = 10;
+    public const string EXTENSION       = '.jpg';
+
+    private Container $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     /**
      * @param Image $image
@@ -29,7 +37,7 @@ class SimpleImageResizer
      * @return string
      * @throws AppException
      */
-    public static function resize(
+    public function resize(
         Image $image,
         int $maxWidth,
         int $maxHeight,
@@ -50,7 +58,7 @@ class SimpleImageResizer
             $dirSuffix = $date->format('Y') . '/' . $date->format('m') . '/' . $date->format('d') . '/';
             $name = self::generateString(self::NAME_LENGTH) . self::EXTENSION;
 
-            $absoluteDir = DIR . $directory . $dirSuffix;
+            $absoluteDir = $this->container->getRootDir() . $directory . $dirSuffix;
             $absolutePath =  $absoluteDir. $name;
             $path = self::FRONT_DIRECTORY . $dirSuffix . $name;
 

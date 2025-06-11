@@ -12,15 +12,15 @@ class LoaderImage
 {
     use StringTrait;
 
-    private const IMAGE_MAX_SIZE   = 5242880;
-    private const IMAGE_MAX_WEIGHT = 3000;
-    private const IMAGE_MAX_HEIGHT = 3000;
-    private const LIMIT_IMAGES     = 10;
-    private const DIRECTORY        = '/public/images/upload/';
-    public const FRONT_DIRECTORY   = '/images/upload/';
-    private const FILE_EXTENSION   = ['jpg', 'jpeg', 'gif', 'png'];
+    private const int IMAGE_MAX_SIZE    = 5242880;
+    private const int IMAGE_MAX_WEIGHT  = 3000;
+    private const int IMAGE_MAX_HEIGHT  = 3000;
+    private const int LIMIT_IMAGES      = 10;
+    private const string DIRECTORY      = 'public/images/upload/';
+    public const string FRONT_DIRECTORY = '/images/upload/';
+    private const array FILE_EXTENSION  = ['jpg', 'jpeg', 'gif', 'png'];
 
-    private bool $testMode;
+    private Container $container;
 
     private static array $errorMessages = [
         UPLOAD_ERR_INI_SIZE   => LoaderException::ERROR_INI_SIZE,
@@ -34,7 +34,7 @@ class LoaderImage
 
     public function __construct(Container $container)
     {
-        $this->testMode = $container->getAppEnv() === Container::APP_TEST;
+        $this->container = $container;
     }
 
     /**
@@ -136,7 +136,6 @@ class LoaderImage
             throw new LoaderException(LoaderException::FILE_NOT_FOUND);
         }
 
-        // TODO Подумать, можно ли избавиться от finfo_open/finfo_close
         $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime = (string)finfo_file($fileInfo, $filePath);
         finfo_close($fileInfo);
@@ -165,7 +164,7 @@ class LoaderImage
             throw new LoaderException(LoaderException::MAX_SIZE);
         }
 
-        if (!$this->testMode && !is_uploaded_file($filePath)) {
+        if (!$this->container->getAppEnv() === Container::APP_TEST && !is_uploaded_file($filePath)) {
             throw new LoaderException(LoaderException::NO_LOAD_TYPE);
         }
 
@@ -187,7 +186,7 @@ class LoaderImage
         $dirSuffix = $date->format('Y') . '/' . $date->format('m') . '/' . $date->format('d') . '/';
         $directory .= $dirSuffix;
 
-        $dPath = DIR . $directory;
+        $dPath = $this->container->getRootDir() . $directory;
         if (!is_dir($dPath)) {
             try {
                 if (!mkdir($dPath, 0755, true) && !is_dir($dPath)) {
@@ -200,13 +199,13 @@ class LoaderImage
 
         $name = self::generateString(10);
         $type = image_type_to_extension($image[2]);
-        $newPath = DIR . $directory . $name . $type;
+        $newPath = $this->container->getRootDir() . $directory . $name . $type;
 
-        if (!$this->testMode && !move_uploaded_file($filePath, $newPath)) {
+        if (!$this->container->getAppEnv() === Container::APP_TEST && !move_uploaded_file($filePath, $newPath)) {
             throw new LoaderException(LoaderException::FAIL_UPLOAD);
         }
 
-        if ($this->testMode) {
+        if ($this->container->getAppEnv() === Container::APP_TEST) {
             copy($filePath, $newPath);
         }
 

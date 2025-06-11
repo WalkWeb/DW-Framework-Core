@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Dotenv\Dotenv;
 use WalkWeb\NW\App;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Container;
@@ -25,15 +26,7 @@ abstract class AbstractTestCase extends TestCase
     public function setUp(): void
     {
         $this->dir = __DIR__;
-
-        if (file_exists(__DIR__ . '/../config.test.php')) {
-            require_once __DIR__ . '/../config.test.php';
-        } else {
-            require_once __DIR__ . '/../config.php';
-        }
-
-        $router = require __DIR__ . '/../routes/web.php';
-
+        $router = require $this->dir . '/../routes/web.php';
         $this->app = new App($router, $this->getContainer());
     }
 
@@ -41,7 +34,6 @@ abstract class AbstractTestCase extends TestCase
     {
         parent::tearDown();
 
-        //restore_error_handler();
         restore_exception_handler();
     }
 
@@ -57,32 +49,78 @@ abstract class AbstractTestCase extends TestCase
 
     /**
      * @param string $appEnv
-     * @param string $viewDir
-     * @param string $migrationDir
      * @return Container
      * @throws AppException
      */
-    protected function getContainer(
-        string $appEnv = APP_ENV,
-        string $viewDir = VIEW_DIR,
-        string $migrationDir = MIGRATION_DIR
-    ): Container
+    protected function getContainer(string $appEnv = 'test', string $viewDir = 'views/'): Container
     {
+        $path = $this->dir . '/../';
+        $dotenv = Dotenv::createImmutable($path, '.env.test');
+        $dotenv->load();
+
         $container = new Container(
             $appEnv,
-            DB_CONFIGS,
-            MAIL_CONFIG,
-            SAVE_LOG,
-            LOG_DIR,
-            CACHE_DIR,
-            $viewDir,
-            $migrationDir,
-            TEMPLATE_DEFAULT,
-            TRANSLATE_DIR,
-            LANGUAGE,
+            $path,
+            $_ENV['KEY'],
+            self::validateDbConfig($_ENV['DATABASE_URL']),
+            self::validateSmtpConfig($_ENV['SMTP_URL']),
+            (bool)$_ENV['SAVE_LOG'],
+            $path,
+            $path . 'cache',
+            $path . $viewDir,
+            $path . 'migrations/',
+            $_ENV['TEMPLATE'],
+            $path . 'translations/',
+            $_ENV['LANGUAGE']
         );
-        $container->set(Runtime::class, new Runtime());
 
+        $container->set(Runtime::class, new Runtime());
         return $container;
+    }
+
+    /**
+     * @param string $url
+     * @return array[]
+     * @throws AppException
+     */
+    private static function validateDbConfig(string $url): array
+    {
+        $params = explode(':', $url);
+
+        if (count($params) !== 4) {
+            throw new AppException('Invalid database configuration: ' . $url);
+        }
+
+        return [
+            'default' => [
+                'user'     => $params[0],
+                'password' => $params[1],
+                'host'     => $params[2],
+                'database' => $params[3],
+            ],
+        ];
+    }
+
+    /**
+     * @param string $url
+     * @return array[]
+     * @throws AppException
+     */
+    private static function validateSmtpConfig(string $url): array
+    {
+        $params = explode(':', $url);
+
+        if (count($params) !== 6) {
+            throw new AppException('Invalid smtp configuration: ' . $url);
+        }
+
+        return [
+            'smtp_host'     => $params[0],
+            'smtp_port'     => (int)$params[1],
+            'smtp_auth'     => (bool)$params[2],
+            'smtp_user'     => $params[3],
+            'smtp_password' => $params[4],
+            'from'          => $params[5],
+        ];
     }
 }

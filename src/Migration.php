@@ -11,19 +11,14 @@ use WalkWeb\NW\Route\Router;
 
 class Migration
 {
-    public const FILE_PREFIX    = 'Version';
-    public const TABLE_NAME     = 'migrations';
+    public const string FILE_PREFIX    = 'Version';
+    public const string TABLE_NAME     = 'migrations';
 
     private Container $container;
 
-    /**
-     * @param Container|null $container
-     * @throws AppException
-     */
-    public function __construct(?Container $container = null)
+    public function __construct(Container $container)
     {
-        $router = new Router(new RouteCollection());
-        $this->container = $container ?? (new App($router, Container::create()))->getContainer();
+        $this->container = $container;
     }
 
     /**

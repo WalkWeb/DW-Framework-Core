@@ -17,7 +17,7 @@ class LoggerTest extends AbstractTestCase
      */
     public function testLoggerSetAndGetLog(): void
     {
-        $logger = new Logger(SAVE_LOG, LOG_DIR);
+        $logger = new Logger(false, '');
 
         $logger->addLog($log1 = 'test log #1');
         $logger->addLog($log2 = 'test log #2');
@@ -32,7 +32,7 @@ class LoggerTest extends AbstractTestCase
      */
     public function testLoggerSaveInFile(): void
     {
-        $logger = new Logger(true, LOG_DIR);
+        $logger = new Logger(true, $this->dir . '/../');
 
         // Удаляем (возможно) уже существующие логи
         if (file_exists($logger->getLogsFilePath())) {

@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace WalkWeb\NW;
 
+use Dotenv\Dotenv;
 use WalkWeb\NW\MySQL\ConnectionPool;
 
 class Container
 {
-    public const APP_PROD = 'prod';
-    public const APP_DEV = 'dev';
-    public const APP_TEST = 'test';
+    public const string APP_PROD  = 'prod';
+    public const string APP_DEV   = 'dev';
+    public const string APP_TEST  = 'test';
 
-    public const GET_ERROR = '%s cannot be created automatically, it must be added to the container via set() manually';
+    private const string CACHE_DIR       = 'cache';
+    private const string VIEW_DIR        = 'views/';
+    private const string MIGRATING_DIR   = 'migrations/';
+    private const string TRANSLATION_DIR = 'translations/';
+
+    public const string GET_ERROR = '%s cannot be created automatically, it must be added to the container via set() manually';
 
     private array $map = [
         ConnectionPool::class => ConnectionPool::class,
@@ -40,6 +46,8 @@ class Container
     private array $storage = [];
 
     private string $appEnv;
+    private string $rootDir;
+    private string $secretKey;
     private array $dbConfigs;
     private array $mailerConfig;
     private bool $loggerSaveLog;
@@ -53,6 +61,8 @@ class Container
 
     /**
      * @param string $appEnv
+     * @param string $rootDir
+     * @param string $secretKey
      * @param array $dbConfigs
      * @param array $mailerConfig
      * @param bool $loggerSaveLog
@@ -67,6 +77,8 @@ class Container
      */
     public function __construct(
         string $appEnv,
+        string $rootDir,
+        string $secretKey,
         array $dbConfigs,
         array $mailerConfig,
         bool $loggerSaveLog,
@@ -79,6 +91,8 @@ class Container
         string $language
     ) {
         $this->setAppEnv($appEnv);
+        $this->rootDir = $rootDir;
+        $this->secretKey = $secretKey;
         $this->dbConfigs = $dbConfigs;
         $this->mailerConfig = $mailerConfig;
         $this->loggerSaveLog = $loggerSaveLog;
@@ -92,45 +106,30 @@ class Container
     }
 
     /**
-     * @param string $appEnv
-     * @param array $dbConfigs
-     * @param array $mailerConfig
-     * @param bool $loggerSaveLog
-     * @param string $loggerDir
-     * @param string $cacheDir
-     * @param string $viewDir
-     * @param string $migrationDir
-     * @param string $template
-     * @param string $translateDir
-     * @param string $language
-     * @return static
+     * @param string $path
+     * @param string $file
+     * @return self
      * @throws AppException
      */
-    public static function create(
-        string $appEnv = APP_ENV,
-        array $dbConfigs = DB_CONFIGS,
-        array $mailerConfig = MAIL_CONFIG,
-        bool $loggerSaveLog = SAVE_LOG,
-        string $loggerDir = LOG_DIR,
-        string $cacheDir = CACHE_DIR,
-        string $viewDir = VIEW_DIR,
-        string $migrationDir = MIGRATION_DIR,
-        string $template = TEMPLATE_DEFAULT,
-        string $translateDir = TRANSLATE_DIR,
-        string $language = LANGUAGE
-    ): self {
+    public static function create(string $path, string $file = '.env'): self
+    {
+        $dotenv = Dotenv::createImmutable($path, $file);
+        $dotenv->load();
+
         return new self(
-            $appEnv,
-            $dbConfigs,
-            $mailerConfig,
-            $loggerSaveLog,
-            $loggerDir,
-            $cacheDir,
-            $viewDir,
-            $migrationDir,
-            $template,
-            $translateDir,
-            $language
+            $_ENV['APP_ENV'],
+            $path,
+            $_ENV['KEY'],
+            self::validateDbConfig($_ENV['DATABASE_URL']),
+            self::validateSmtpConfig($_ENV['SMTP_URL']),
+            (bool)$_ENV['SAVE_LOG'],
+            $path,
+            $path . self::CACHE_DIR,
+            $path . self::VIEW_DIR,
+            $path . self::MIGRATING_DIR,
+            $_ENV['TEMPLATE'],
+            $path . self::TRANSLATION_DIR,
+            $_ENV['LANGUAGE']
         );
     }
 
@@ -175,6 +174,22 @@ class Container
     {
         $id = $this->getNameService($id);
         unset($this->storage[$id]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getRootDir(): string
+    {
+        return $this->rootDir;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSecretKey(): string
+    {
+        return $this->secretKey;
     }
 
     /**
@@ -427,5 +442,51 @@ class Container
         }
 
         $this->appEnv = $appEnv;
+    }
+
+    /**
+     * @param string $url
+     * @return array[]
+     * @throws AppException
+     */
+    private static function validateDbConfig(string $url): array
+    {
+        $params = explode(':', $url);
+
+        if (count($params) !== 4) {
+            throw new AppException('Invalid database configuration: ' . $url);
+        }
+
+        return [
+            'default' => [
+                'user'     => $params[0],
+                'password' => $params[1],
+                'host'     => $params[2],
+                'database' => $params[3],
+            ],
+        ];
+    }
+
+    /**
+     * @param string $url
+     * @return array[]
+     * @throws AppException
+     */
+    private static function validateSmtpConfig(string $url): array
+    {
+        $params = explode(':', $url);
+
+        if (count($params) !== 6) {
+            throw new AppException('Invalid smtp configuration: ' . $url);
+        }
+
+        return [
+            'smtp_host'     => $params[0],
+            'smtp_port'     => (int)$params[1],
+            'smtp_auth'     => (bool)$params[2],
+            'smtp_user'     => $params[3],
+            'smtp_password' => $params[4],
+            'from'          => $params[5],
+        ];
     }
 }

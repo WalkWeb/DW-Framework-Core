@@ -155,7 +155,7 @@ EOT;
     public function testAppCreateInternalErrorResponseNoTemplateSuccess(): void
     {
         $router = new Router(new RouteCollection());
-        new App($router, $this->getContainer(APP_ENV, 'unknown_view'));
+        new App($router, $this->getContainer('prod', 'unknown_view/'));
 
         $response = App::createInternalErrorResponse();
 
@@ -216,7 +216,7 @@ EOT;
         $routes->get('test', '/', ExampleHandler::class)->addMiddleware($middleware);
         $router = new Router($routes);
         $request = new Request(['REQUEST_URI' => '/']);
-        $container = $this->getContainer(APP_ENV, VIEW_DIR);
+        $container = $this->getContainer();
         $app = new App($router, $container);
 
         $this->expectException(AppException::class);
@@ -242,7 +242,7 @@ EOT;
         ;
         $router = new Router($routes);
 
-        $container = $this->getContainer(APP_ENV, VIEW_DIR);
+        $container = $this->getContainer();
 
         $app = new App($router, $container);
 
@@ -271,7 +271,7 @@ EOT;
         ;
         $router = new Router($routes);
 
-        $container = $this->getContainer(APP_ENV, VIEW_DIR);
+        $container = $this->getContainer();
 
         $app = new App($router, $container);
 

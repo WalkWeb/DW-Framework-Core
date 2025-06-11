@@ -19,9 +19,9 @@ class SimpleImageResizerTest extends AbstractTestCase
     #[DataProvider('successDataProvider')]
     public function testSimpleImageResizerSuccess(Image $image): void
     {
-        $resizeImagePath = SimpleImageResizer::resize($image, 300, 300);
+        $resizeImagePath = $this->getResizer()->resize($image, 300, 300);
 
-        $path = DIR . '/public/' . $resizeImagePath;
+        $path = $this->dir . '/../public/' . $resizeImagePath;
 
         self::assertFileExists($path);
     }
@@ -41,14 +41,14 @@ class SimpleImageResizerTest extends AbstractTestCase
             'file_path'
         );
 
-        self::assertEquals($image->getFilePath(), SimpleImageResizer::resize($image, 500, 300));
+        self::assertEquals($image->getFilePath(), $this->getResizer()->resize($image, 500, 300));
     }
 
     public function testSimpleImageResizerAbsolutePathNotFound(): void
     {
         $this->expectException(AppException::class);
         $this->expectExceptionMessage(LoaderException::ERROR_NO_DIRECTORY);
-        SimpleImageResizer::resize($this->getImage(), 300, 300, 50, '/invalid_dir/');
+        $this->getResizer()->resize($this->getImage(), 300, 300, 50, '/invalid_dir/');
     }
 
     /**
@@ -94,6 +94,15 @@ class SimpleImageResizerTest extends AbstractTestCase
                 )
             ],
         ];
+    }
+
+    /**
+     * @return SimpleImageResizer
+     * @throws AppException
+     */
+    private function getResizer(): SimpleImageResizer
+    {
+        return new SimpleImageResizer(self::getContainer());
     }
 
     /**
