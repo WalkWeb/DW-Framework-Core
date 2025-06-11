@@ -13,10 +13,10 @@ class Container
     public const string APP_DEV   = 'dev';
     public const string APP_TEST  = 'test';
 
-    private const string CACHE_DIR       = 'cache';
-    private const string VIEW_DIR        = 'views/';
-    private const string MIGRATING_DIR   = 'migrations/';
-    private const string TRANSLATION_DIR = 'translations/';
+    public const string CACHE_DIR       = 'cache/';
+    public const string VIEW_DIR        = 'views/';
+    public const string MIGRATING_DIR   = 'migrations/';
+    public const string TRANSLATION_DIR = 'translations/';
 
     public const string GET_ERROR = '%s cannot be created automatically, it must be added to the container via set() manually';
 
@@ -119,7 +119,7 @@ class Container
         return new self(
             $_ENV['APP_ENV'],
             $path,
-            $_ENV['KEY'],
+            $_ENV['SECRET_KEY'],
             self::validateDbConfig($_ENV['DATABASE_URL']),
             self::validateSmtpConfig($_ENV['SMTP_URL']),
             (bool)$_ENV['SAVE_LOG'],

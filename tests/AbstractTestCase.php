@@ -49,10 +49,11 @@ abstract class AbstractTestCase extends TestCase
 
     /**
      * @param string $appEnv
+     * @param string $viewDir
      * @return Container
      * @throws AppException
      */
-    protected function getContainer(string $appEnv = 'test', string $viewDir = 'views/'): Container
+    protected function getContainer(string $appEnv = 'test', string $viewDir = Container::VIEW_DIR): Container
     {
         $path = $this->dir . '/../';
         $dotenv = Dotenv::createImmutable($path, '.env.test');
@@ -61,16 +62,16 @@ abstract class AbstractTestCase extends TestCase
         $container = new Container(
             $appEnv,
             $path,
-            $_ENV['KEY'],
+            $_ENV['SECRET_KEY'],
             self::validateDbConfig($_ENV['DATABASE_URL']),
             self::validateSmtpConfig($_ENV['SMTP_URL']),
             (bool)$_ENV['SAVE_LOG'],
             $path,
-            $path . 'cache',
+            $path . Container::CACHE_DIR,
             $path . $viewDir,
-            $path . 'migrations/',
+            $path . Container::MIGRATING_DIR,
             $_ENV['TEMPLATE'],
-            $path . 'translations/',
+            $path . Container::TRANSLATION_DIR,
             $_ENV['LANGUAGE']
         );
 

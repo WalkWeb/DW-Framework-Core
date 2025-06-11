@@ -48,7 +48,7 @@ class ContainerTest extends AbstractTestCase
         self::assertEquals(new Csrf($container), $container->getCsrf());
         self::assertEquals(new Captcha($container), $container->getCaptcha());
         self::assertEquals(new Validator($container), $container->getValidator());
-        self::assertEquals(self::PATH . 'cache', $container->getCacheDir());
+        self::assertEquals(self::PATH . 'cache/', $container->getCacheDir());
         self::assertEquals(self::PATH . 'views/', $container->getViewDir());
         self::assertEquals(self::PATH . 'migrations/', $container->getMigrationDir());
         self::assertEquals(self::PATH . 'translations/', $container->getTranslateDir());

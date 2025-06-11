@@ -6,12 +6,12 @@ use Exception;
 
 abstract class AbstractHandler
 {
-    public const ERROR_MISS_VIEW   = 'View missing: %s';
-    public const ERROR_MISS_LAYOUT = 'Layout missing: %s';
-    public const ERROR_MISS_CACHE  = 'Cache missing: %s';
+    public const string ERROR_MISS_VIEW   = 'View missing: %s';
+    public const string ERROR_MISS_LAYOUT = 'Layout missing: %s';
+    public const string ERROR_MISS_CACHE  = 'Cache missing: %s';
 
     // Месторасположение директории, где хранится html-кеш
-    public const CACHE_DIR = '/html/';
+    public const string HTML_CACHE_DIR = 'html/';
 
     /**
      * Title
@@ -204,7 +204,7 @@ abstract class AbstractHandler
         }
 
         // Проверяем, есть ли кэш
-        $filePath = $this->container->getCacheDir() . self::CACHE_DIR . $name;
+        $filePath = $this->container->getCacheDir() . self::HTML_CACHE_DIR . $name;
         if (file_exists($filePath)) {
 
             // Проверяем, не просрочен ли он
@@ -230,7 +230,7 @@ abstract class AbstractHandler
             $name .= '_' . $id;
         }
 
-        $file = fopen($this->container->getCacheDir() . self::CACHE_DIR . $name, 'wb');
+        $file = fopen($this->container->getCacheDir() . self::HTML_CACHE_DIR . $name, 'wb');
         fwrite($file, $content . $prefix);
         fclose($file);
     }
@@ -243,7 +243,7 @@ abstract class AbstractHandler
      */
     protected function deleteCache(string $name): void
     {
-        $filePath = $this->container->getCacheDir() . self::CACHE_DIR . $name;
+        $filePath = $this->container->getCacheDir() . self::HTML_CACHE_DIR . $name;
         if (!file_exists($filePath)) {
             throw new AppException(sprintf(self::ERROR_MISS_CACHE, $filePath));
         }
