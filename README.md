@@ -16,3 +16,7 @@ And set your parameters in `.env` file
 ## Test coverage
 
 ![alt text](public/images/test-coverage.png)
+
+## GitLab CI
+
+![alt text](public/images/gitlab-ci.png)
