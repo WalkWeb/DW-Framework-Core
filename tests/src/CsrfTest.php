@@ -36,6 +36,8 @@ class CsrfTest extends AbstractTestCase
      */
     public function testCsrfCheckCsrfToken(): void
     {
+        $_ENV['APP_ENV'] = Container::APP_PROD;
+
         $container = $this->getContainer(Container::APP_PROD);
         $csrf = new Csrf($container);
 
@@ -45,5 +47,7 @@ class CsrfTest extends AbstractTestCase
 
         self::assertFalse($csrf->checkCsrfToken('invalid_token'));
         self::assertTrue($csrf->checkCsrfToken($token));
+
+        $_ENV['APP_ENV'] = Container::APP_TEST;
     }
 }

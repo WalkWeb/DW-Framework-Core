@@ -35,12 +35,16 @@ class CaptchaTest extends AbstractTestCase
     #[DataProvider('normalAppEnvDataProvider')]
     public function testCaptchaCheckCaptchaNormalMode(string $appENV): void
     {
-        $capthca = new Captcha($this->getContainer($appENV));
+        $_ENV['APP_ENV'] = $appENV;
+
+        $capthca = new Captcha($this->getContainer());
 
         $capthca->getCaptchaImage();
 
         self::assertTrue($capthca->checkCaptcha($capthca->getCaptcha()));
         self::assertFalse($capthca->checkCaptcha('invalid_captcha'));
+
+        $_ENV['APP_ENV'] = Container::APP_TEST;
     }
 
     /**

@@ -48,80 +48,14 @@ abstract class AbstractTestCase extends TestCase
     }
 
     /**
-     * @param string $appEnv
      * @param string $viewDir
      * @return Container
      * @throws AppException
      */
-    protected function getContainer(string $appEnv = 'test', string $viewDir = Container::VIEW_DIR): Container
+    protected function getContainer(string $viewDir = Container::VIEW_DIR): Container
     {
-        $path = $this->dir . '/../';
-        $dotenv = Dotenv::createImmutable($path, '.env.test');
-        $dotenv->load();
-
-        $container = new Container(
-            $appEnv,
-            $path,
-            $_ENV['SECRET_KEY'],
-            self::validateDbConfig($_ENV['DATABASE_URL']),
-            self::validateSmtpConfig($_ENV['SMTP_URL']),
-            (bool)$_ENV['SAVE_LOG'],
-            $path,
-            $path . Container::CACHE_DIR,
-            $path . $viewDir,
-            $path . Container::MIGRATING_DIR,
-            $_ENV['TEMPLATE'],
-            $path . Container::TRANSLATION_DIR,
-            $_ENV['LANGUAGE']
-        );
-
+        $container = new Container($this->dir . '/../', '.env.test', $viewDir);
         $container->set(Runtime::class, new Runtime());
         return $container;
-    }
-
-    /**
-     * @param string $url
-     * @return array[]
-     * @throws AppException
-     */
-    private static function validateDbConfig(string $url): array
-    {
-        $params = explode(':', $url);
-
-        if (count($params) !== 4) {
-            throw new AppException('Invalid database configuration: ' . $url);
-        }
-
-        return [
-            'default' => [
-                'user'     => $params[0],
-                'password' => $params[1],
-                'host'     => $params[2],
-                'database' => $params[3],
-            ],
-        ];
-    }
-
-    /**
-     * @param string $url
-     * @return array[]
-     * @throws AppException
-     */
-    private static function validateSmtpConfig(string $url): array
-    {
-        $params = explode(':', $url);
-
-        if (count($params) !== 6) {
-            throw new AppException('Invalid smtp configuration: ' . $url);
-        }
-
-        return [
-            'smtp_host'     => $params[0],
-            'smtp_port'     => (int)$params[1],
-            'smtp_auth'     => (bool)$params[2],
-            'smtp_user'     => $params[3],
-            'smtp_password' => $params[4],
-            'from'          => $params[5],
-        ];
     }
 }

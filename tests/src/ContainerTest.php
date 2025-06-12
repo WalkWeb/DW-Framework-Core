@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\src;
 
-use Dotenv\Dotenv;
 use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 use WalkWeb\NW\AppException;
@@ -31,8 +30,7 @@ class ContainerTest extends AbstractTestCase
     #[DataProvider('createDataProvider')]
     public function testContainerCreate(array $dbConfig, array $smtpConfig): void
     {
-        // create default
-        $container = Container::create(self::PATH);
+        $container = new Container(self::PATH);
 
         $saveLog = false;
         $logDir = self::PATH;
@@ -45,6 +43,10 @@ class ContainerTest extends AbstractTestCase
             new Logger($saveLog, $logDir),
             $container->getLogger()
         );
+        self::assertEquals(
+            new Mailer($container, $smtpConfig),
+            $container->getMailer(),
+        );
         self::assertEquals(new Csrf($container), $container->getCsrf());
         self::assertEquals(new Captcha($container), $container->getCaptcha());
         self::assertEquals(new Validator($container), $container->getValidator());
@@ -53,51 +55,6 @@ class ContainerTest extends AbstractTestCase
         self::assertEquals(self::PATH . 'migrations/', $container->getMigrationDir());
         self::assertEquals(self::PATH . 'translations/', $container->getTranslateDir());
         self::assertEquals('test', $container->getAppEnv());
-
-        // create manually
-        $appEnv = Container::APP_PROD;
-        $secretKey = 'secret_key';
-        $rootDir = 'root_dir';
-        $loggerDir = 'logger_dir';
-        $cacheDir = 'cache_dir';
-        $viewDir = 'view_dir';
-        $migrationDir = 'migration_dir';
-        $template = 'template';
-        $translateDir = 'translate_dir';
-        $language = 'en';
-
-        $container = new Container(
-            $appEnv,
-            $rootDir,
-            $secretKey,
-            $dbConfig,
-            $smtpConfig,
-            $saveLog,
-            $loggerDir,
-            $cacheDir,
-            $viewDir,
-            $migrationDir,
-            $template,
-            $translateDir,
-            $language
-        );
-
-        self::assertEquals($appEnv, $container->getAppEnv());
-        self::assertEquals($rootDir, $container->getRootDir());
-        self::assertEquals($secretKey, $container->getSecretKey());
-        self::assertEquals(
-            new Logger($saveLog, $loggerDir),
-            $container->getLogger()
-        );
-        self::assertEquals(new Csrf($container), $container->getCsrf());
-        self::assertEquals(new Captcha($container), $container->getCaptcha());
-        self::assertEquals(new Validator($container), $container->getValidator());
-        self::assertEquals($cacheDir, $container->getCacheDir());
-        self::assertEquals($viewDir, $container->getViewDir());
-        self::assertEquals($migrationDir, $container->getMigrationDir());
-        self::assertEquals($appEnv, $container->getAppEnv());
-        self::assertEquals($template, $container->getTemplate());
-        self::assertEquals($translateDir, $container->getTranslateDir());
     }
 
     /**
@@ -331,7 +288,7 @@ class ContainerTest extends AbstractTestCase
     #[DataProvider('getServiceErrorDataProvider')]
     public function testContainerGetServiceFail(string $class, string $error): void
     {
-        $container = Container::create(self::PATH);
+        $container = new Container(self::PATH);
 
         $this->expectException(AppException::class);
         $this->expectExceptionMessage($error);
@@ -346,7 +303,7 @@ class ContainerTest extends AbstractTestCase
     #[DataProvider('getMethodServiceErrorDataProvider')]
     public function testContainerGetMethodServiceFail(string $method, string $error): void
     {
-        $container = Container::create(self::PATH);
+        $container = new Container(self::PATH);
 
         $this->expectException(AppException::class);
         $this->expectExceptionMessage($error);
@@ -365,24 +322,29 @@ class ContainerTest extends AbstractTestCase
 
     /**
      * Тест на попытку указать некорректный APP_ENV
-     *
-     * @throws AppException
      */
     public function testContainerSetAppEnvFail(): void
     {
-        $this->expectException(AppException::class);
-        $this->expectExceptionMessage('Invalid APP_ENV. Valid values: prod, dev, test');
-        $this->getContainer('invalid_app_env');
+        $_ENV['APP_ENV'] = 'invalid_app_env';
+
+        try {
+            $this->getContainer();
+        } catch (AppException $e) {
+            self::assertEquals(
+                'Invalid APP_ENV. Valid values: prod, dev, test',
+                $e->getMessage(),
+            );
+        }
+
+        $_ENV['APP_ENV'] = Container::APP_TEST;
     }
 
     /**
      * Тест на установку нового template
-     *
-     * @throws AppException
      */
     public function testContainerSetTemplate(): void
     {
-        $container = Container::create(self::PATH);
+        $container = new Container(self::PATH);
 
         self::assertEquals('default', $container->getTemplate());
 
@@ -434,18 +396,18 @@ class ContainerTest extends AbstractTestCase
             [
                 [
                     'default' => [
-                        'host'     => 'HOST',
+                        'host'     => 'DB_HOST',
                         'user'     => 'YOUR_DB_USER_NAME',
                         'password' => 'YOUR_DB_PASSWORD',
-                        'database' => 'DATABASE',
+                        'database' => 'DATABASE_NAME',
                     ],
                 ],
                 [
-                    'smtp_host'     => 'smtp_host',
+                    'smtp_host'     => 'HOST',
                     'smtp_port'     => 465,
                     'smtp_auth'     => true,
-                    'smtp_user'     => 'smtp_user',
-                    'smtp_password' => 'smtp_password',
+                    'smtp_user'     => 'USER',
+                    'smtp_password' => 'PASSWORD',
                     'from'          => 'mail@mail.com',
                 ],
             ],

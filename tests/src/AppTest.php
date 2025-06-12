@@ -155,7 +155,7 @@ EOT;
     public function testAppCreateInternalErrorResponseNoTemplateSuccess(): void
     {
         $router = new Router(new RouteCollection());
-        new App($router, $this->getContainer('prod', 'unknown_view/'));
+        new App($router, $this->getContainer('unknown_view/'));
 
         $response = App::createInternalErrorResponse();
 

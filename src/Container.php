@@ -59,78 +59,30 @@ class Container
     private string $translateDir;
     private string $language;
 
+    private array $env;
+
     /**
-     * @param string $appEnv
      * @param string $rootDir
-     * @param string $secretKey
-     * @param array $dbConfigs
-     * @param array $mailerConfig
-     * @param bool $loggerSaveLog
-     * @param string $loggerDir
-     * @param string $cacheDir
-     * @param string $viewDir
-     * @param string $migrationDir
-     * @param string $template
-     * @param string $translateDir
-     * @param string $language
-     * @throws AppException
-     */
-    public function __construct(
-        string $appEnv,
-        string $rootDir,
-        string $secretKey,
-        array $dbConfigs,
-        array $mailerConfig,
-        bool $loggerSaveLog,
-        string $loggerDir,
-        string $cacheDir,
-        string $viewDir,
-        string $migrationDir,
-        string $template,
-        string $translateDir,
-        string $language
-    ) {
-        $this->setAppEnv($appEnv);
-        $this->rootDir = $rootDir;
-        $this->secretKey = $secretKey;
-        $this->dbConfigs = $dbConfigs;
-        $this->mailerConfig = $mailerConfig;
-        $this->loggerSaveLog = $loggerSaveLog;
-        $this->loggerDir = $loggerDir;
-        $this->cacheDir = $cacheDir;
-        $this->viewDir = $viewDir;
-        $this->migrationDir = $migrationDir;
-        $this->template = $template;
-        $this->translateDir = $translateDir;
-        $this->language = $language;
-    }
-
-    /**
-     * @param string $path
      * @param string $file
-     * @return self
+     * @param string $viewDir
      * @throws AppException
      */
-    public static function create(string $path, string $file = '.env'): self
+    public function __construct(string $rootDir, string $file = '.env', string $viewDir = self::VIEW_DIR)
     {
-        $dotenv = Dotenv::createImmutable($path, $file);
-        $dotenv->load();
-
-        return new self(
-            $_ENV['APP_ENV'],
-            $path,
-            $_ENV['SECRET_KEY'],
-            self::validateDbConfig($_ENV['DATABASE_URL']),
-            self::validateSmtpConfig($_ENV['SMTP_URL']),
-            (bool)$_ENV['SAVE_LOG'],
-            $path,
-            $path . self::CACHE_DIR,
-            $path . self::VIEW_DIR,
-            $path . self::MIGRATING_DIR,
-            $_ENV['TEMPLATE'],
-            $path . self::TRANSLATION_DIR,
-            $_ENV['LANGUAGE']
-        );
+        $this->setEnv($rootDir, $file);
+        $this->setAppEnv($this->getEnv('APP_ENV'));
+        $this->rootDir = $rootDir;
+        $this->secretKey = $this->getEnv('SECRET_KEY');
+        $this->dbConfigs = self::validateDbConfig($this->getEnv('DATABASE_URL'));
+        $this->mailerConfig = self::validateSmtpConfig($this->getEnv('SMTP_URL'));
+        $this->loggerSaveLog = (bool)$this->getEnv('SAVE_LOG');
+        $this->loggerDir = $rootDir;
+        $this->cacheDir = $rootDir . self::CACHE_DIR;
+        $this->viewDir = $rootDir . $viewDir;
+        $this->migrationDir = $rootDir . self::MIGRATING_DIR;
+        $this->template = $this->getEnv('TEMPLATE');
+        $this->translateDir = $rootDir . self::TRANSLATION_DIR;
+        $this->language = $this->getEnv('LANGUAGE');
     }
 
     /**
@@ -174,6 +126,20 @@ class Container
     {
         $id = $this->getNameService($id);
         unset($this->storage[$id]);
+    }
+
+    /**
+     * @param string $field
+     * @return mixed
+     * @throws AppException
+     */
+    public function getEnv(string $field): mixed
+    {
+        if (!array_key_exists($field, $this->env)) {
+            throw new AppException("Parameter '$field' is not defined in environment");
+        }
+
+        return $this->env[$field];
     }
 
     /**
@@ -390,7 +356,7 @@ class Container
         try {
             $class = $this->getNameService($class);
             return array_key_exists($class, $this->storage);
-        } catch (AppException $e) {
+        } catch (AppException) {
             // Контейнер может иметь только фиксированный набор сервисов. Если указан неизвестный - значит он не может
             // быть добавлен.
             return false;
@@ -407,23 +373,13 @@ class Container
      */
     private function createService(string $class): object
     {
-        switch ($class) {
-            case ConnectionPool::class:
-                $service = new ConnectionPool($this, $this->dbConfigs);
-                break;
-            case Mailer::class:
-                $service = new Mailer($this, $this->mailerConfig);
-                break;
-            case Logger::class:
-                $service = new Logger($this->loggerSaveLog, $this->loggerDir);
-                break;
-            case Translation::class:
-                $service = new Translation($this, $this->language);
-                break;
-            default:
-                $service = new $class($this);
-                break;
-        }
+        $service = match ($class) {
+            ConnectionPool::class => new ConnectionPool($this, $this->dbConfigs),
+            Mailer::class => new Mailer($this, $this->mailerConfig),
+            Logger::class => new Logger($this->loggerSaveLog, $this->loggerDir),
+            Translation::class => new Translation($this, $this->language),
+            default => new $class($this),
+        };
 
         $this->storage[$this->map[$class]] = $service;
         return $service;
@@ -488,5 +444,17 @@ class Container
             'smtp_password' => $params[4],
             'from'          => $params[5],
         ];
+    }
+
+    /**
+     * @param string $path
+     * @param string $file
+     * @return void
+     */
+    private function setEnv(string $path, string $file): void
+    {
+        $dotenv = Dotenv::createImmutable($path, $file);
+        $dotenv->load();
+        $this->env = $_ENV;
     }
 }
