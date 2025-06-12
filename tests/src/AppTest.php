@@ -6,6 +6,7 @@ namespace Tests\src;
 
 use WalkWeb\NW\App;
 use WalkWeb\NW\AppException;
+use WalkWeb\NW\Container;
 use WalkWeb\NW\Request;
 use WalkWeb\NW\Response;
 use WalkWeb\NW\Route\RouteCollection;
@@ -155,7 +156,7 @@ EOT;
     public function testAppCreateInternalErrorResponseNoTemplateSuccess(): void
     {
         $router = new Router(new RouteCollection());
-        new App($router, $this->getContainer('unknown_view/'));
+        new App($router, $this->getContainer(Container::APP_PROD, 'unknown_view/'));
 
         $response = App::createInternalErrorResponse();
 

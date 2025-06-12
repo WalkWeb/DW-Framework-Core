@@ -48,13 +48,17 @@ abstract class AbstractTestCase extends TestCase
     }
 
     /**
+     * @param string $appEnv
      * @param string $viewDir
      * @return Container
      * @throws AppException
      */
-    protected function getContainer(string $viewDir = Container::VIEW_DIR): Container
+    protected function getContainer(
+        string $appEnv = '',
+        string $viewDir = Container::VIEW_DIR
+    ): Container
     {
-        $container = new Container($this->dir . '/../', '.env.test', $viewDir);
+        $container = new Container($this->dir . '/../', '.env.test', $viewDir, $appEnv);
         $container->set(Runtime::class, new Runtime());
         return $container;
     }

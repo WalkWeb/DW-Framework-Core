@@ -65,12 +65,19 @@ class Container
      * @param string $rootDir
      * @param string $file
      * @param string $viewDir
+     * @param string $appEnv
+     * @param string $template
      * @throws AppException
      */
-    public function __construct(string $rootDir, string $file = '.env', string $viewDir = self::VIEW_DIR)
-    {
+    public function __construct(
+        string $rootDir,
+        string $file = '.env',
+        string $viewDir = self::VIEW_DIR,
+        string $appEnv = '',
+        string $template = '',
+    ) {
         $this->setEnv($rootDir, $file);
-        $this->setAppEnv($this->getEnv('APP_ENV'));
+        $this->setAppEnv($appEnv ?: $this->getEnv('APP_ENV'));
         $this->rootDir = $rootDir;
         $this->secretKey = $this->getEnv('SECRET_KEY');
         $this->dbConfigs = self::validateDbConfig($this->getEnv('DATABASE_URL'));
@@ -80,7 +87,7 @@ class Container
         $this->cacheDir = $rootDir . self::CACHE_DIR;
         $this->viewDir = $rootDir . $viewDir;
         $this->migrationDir = $rootDir . self::MIGRATING_DIR;
-        $this->template = $this->getEnv('TEMPLATE');
+        $this->template = $template ?: $this->getEnv('TEMPLATE');
         $this->translateDir = $rootDir . self::TRANSLATION_DIR;
         $this->language = $this->getEnv('LANGUAGE');
     }
