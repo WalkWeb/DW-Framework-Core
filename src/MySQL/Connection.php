@@ -10,68 +10,45 @@ use Throwable;
 
 class Connection
 {
-    public const ERROR_CONNECT = 'Невозможно подключиться к MySQL: ';
-    public const ERROR_PREPARE = 'Ошибка выполнения SQL: ';
+    public const string ERROR_CONNECT = 'Unable connect to MySQL: ';
+    public const string ERROR_PREPARE = 'Execution error SQL: ';
 
     private mysqli $connection;
 
     private string $error = '';
-
-    /**
-     * Количество запросов
-     *
-     * @var int
-     */
     private int $queryNumber = 0;
-
-    /**
-     * Все выполненные запросы в базу
-     *
-     * @var string[]
-     */
     private array $queries = [];
-
     private Logger $logger;
 
     /**
-     * Создает подключение к БД
-     *
-     * @param string $host
-     * @param string $user
-     * @param string $password
-     * @param string $database
-     * @param Container $container
      * @throws AppException
      */
-    public function __construct(string $host, string $user, string $password, string $database, Container $container)
-    {
+    public function __construct(
+        string $host,
+        string $user,
+        string $password,
+        string $database,
+        int $port,
+        Container $container
+    ) {
         $this->logger = $container->getLogger();
-        $this->createConnection($host, $user, $password, $database);
+        $this->createConnection($host, $user, $password, $database, $port);
     }
 
     /**
-     * Закрывает соединение с бд
+     * Close connection
      */
     public function __destruct()
     {
-        if ($this->connection) {
-            $this->connection->close();
-        }
+        $this->connection->close();
     }
 
-    /**
-     * Возвращает true если все ок, и false - если есть ошибки
-     *
-     * @return bool
-     */
     public function isSuccess(): bool
     {
-        $error = $this->getError();
-        return ($error === '' || $error === null);
+        return $this->getError() === '';
     }
 
     /**
-     * @param string $error
      * @throws AppException
      */
     public function setError(string $error): void
@@ -80,11 +57,6 @@ class Connection
         $this->error = $error;
     }
 
-    /**
-     * Возвращает ошибку
-     *
-     * @return string
-     */
     public function getError(): string
     {
         if ($this->error) {
@@ -95,15 +67,11 @@ class Connection
     }
 
     /**
-     * Обработка и выполнение запроса
+     * Prepare and run sql query
      *
-     * @param $sql
-     * @param array $params
-     * @param bool $single
-     * @return array
      * @throws AppException
      */
-    public function query($sql, $params = [], $single = false): array
+    public function query(string $sql, array $params = [], bool $single = false): array
     {
         $this->error = '';
 
@@ -111,18 +79,16 @@ class Connection
             $sql .= ' LIMIT 1';
         }
 
-        if ($this->logger) {
-            $this->saveQuery($sql);
-        }
+        $this->saveQuery($sql);
 
         $param_arr = null;
 
         if (count($params) > 0) {
             $param_types = '';
-            $param_arr = [0 => ''];
+            $param_arr = [''];
             foreach ($params as $key => $val) {
                 $param_types .= $val['type'];
-                $param_arr[] = &$params[$key]['value']; // Передача значений осуществляется по ссылке.
+                $param_arr[] = &$params[$key]['value']; // values are passed by reference.
             }
             $param_arr[0] = $param_types;
         }
@@ -131,7 +97,7 @@ class Connection
         if ($stmt === false) {
             $this->setError(self::ERROR_PREPARE . $this->connection->errno . ' ' . $this->connection->error . '. SQL: ' . $sql);
         } else {
-            // Если параметры не пришли - то bind_param не требуется
+            // if parameters have not arrived, then bind_param is not required
             if (count($params) > 0) {
                 call_user_func_array([$stmt, 'bind_param'], $param_arr);
             }
@@ -163,19 +129,17 @@ class Connection
     }
 
     /**
-     * Возвращает ID добавленной записи
-     *
-     * @return int|string
+     * Return ID insert row
      */
-    public function getInsertId()
+    public function getInsertId(): int|string
     {
         return mysqli_insert_id($this->connection);
     }
 
     /**
-     * Отключает автокоммит (для включения транзакции на несколько запросов)
+     * Set autocommit mode
      *
-     * @param $mode boolean True - автовыполнение коммита, False - отключение автокоммита
+     * @param $mode boolean true - autocommit, false - no autocommit
      * @return bool
      */
     public function autocommit(bool $mode): bool
@@ -184,7 +148,7 @@ class Connection
     }
 
     /**
-     * Закрыть транзакцию в случае успешного выполнения запросов, и применить все изменения
+     * Close commit and apply changes
      *
      * @return bool
      */
@@ -194,7 +158,7 @@ class Connection
     }
 
     /**
-     * Закрыть транзакцию и откатить все изменения (для вариантов, когда что-то пошло не так)
+     * Close commit and skip changes
      *
      * @return bool
      */
@@ -204,7 +168,7 @@ class Connection
     }
 
     /**
-     * Возвращает количество сделанных запросов
+     * Return executes query number
      *
      * @return int
      */
@@ -214,7 +178,7 @@ class Connection
     }
 
     /**
-     * Возвращает выполненные запросы в базу
+     * Return executes queries
      *
      * @return string[]
      */
@@ -224,16 +188,12 @@ class Connection
     }
 
     /**
-     * @param string $host
-     * @param string $user
-     * @param string $password
-     * @param string $database
      * @throws AppException
      */
-    private function createConnection(string $host, string $user, string $password, string $database): void
+    private function createConnection(string $host, string $user, string $password, string $database, int $port): void
     {
         try {
-            $this->connection = mysqli_connect($host, $user, $password, $database);
+            $this->connection = mysqli_connect($host, $user, $password, $database, $port);
         } catch (Throwable $e) {
             $error = self::ERROR_CONNECT . $e->getMessage();
             $this->logger->addLog($error);

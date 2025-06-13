@@ -36,7 +36,7 @@ class ConnectionPool
      * If name not set - uses "DATABASE_URL", else use "DATABASE_NAME_CONNECTION", example:
      *
      * .env:
-     * DATABASE_SECONDARY="${MYSQL_USER}:${MYSQL_PASSWORD}:${MYSQL_HOST}:${MYSQL_DATABASE}"
+     * DATABASE_SECONDARY="${MYSQL_USER}:${MYSQL_PASSWORD}:${MYSQL_HOST}:${MYSQL_DATABASE}:${MYSQL_PORT}"
      *
      * php:
      * $connectionPool->getConnection('secondary')
@@ -80,7 +80,7 @@ class ConnectionPool
     {
         $params = explode(':', $url = $this->container->getEnv($name));
 
-        if (count($params) !== 4) {
+        if (count($params) !== 5) {
             throw new AppException('Invalid database configuration: ' . $url);
         }
 
@@ -89,6 +89,7 @@ class ConnectionPool
             'password' => $params[1],
             'host'     => $params[2],
             'database' => $params[3],
+            'port'     => (int)$params[4],
         ];
     }
 
@@ -134,6 +135,7 @@ class ConnectionPool
             $params['user'],
             $params['password'],
             $params['database'],
+            $params['port'],
             $this->container,
         );
     }

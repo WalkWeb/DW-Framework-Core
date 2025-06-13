@@ -35,7 +35,7 @@ class ConnectionPoolTest extends AbstractTestCase
      */
     public function testConnectionPoolGetConfigFail()
     {
-        $url = 'YOUR_DB_USER_NAME#YOUR_DB_PASSWORD#DB_HOST#DATABASE_NAME';
+        $url = 'YOUR_DB_USER_NAME#YOUR_DB_PASSWORD#DB_HOST#DATABASE_NAME#3306';
         $_ENV['DATABASE_INVALID'] = $url;
 
         $container = new Container(__DIR__ . '/../../../', '.env.test');
@@ -96,6 +96,7 @@ class ConnectionPoolTest extends AbstractTestCase
                     'password' => 'YOUR_DB_PASSWORD',
                     'host'     => 'DB_HOST',
                     'database' => 'DATABASE_NAME',
+                    'port'     => 3306,
                 ],
             ],
         ];
