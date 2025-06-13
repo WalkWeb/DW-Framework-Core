@@ -93,30 +93,34 @@ class Connection
             $param_arr[0] = $param_types;
         }
 
-        $stmt = $this->connection->prepare($sql);
-        if ($stmt === false) {
-            $this->setError(self::ERROR_PREPARE . $this->connection->errno . ' ' . $this->connection->error . '. SQL: ' . $sql);
-        } else {
-            // if parameters have not arrived, then bind_param is not required
-            if (count($params) > 0) {
-                call_user_func_array([$stmt, 'bind_param'], $param_arr);
-            }
-            if ($stmt->execute()) {
-                $res = $stmt->get_result();
-                if ($res !== false) {
-                    $result = [];
-                    $i = 0;
-                    while ($row = $res->fetch_array(MYSQLI_ASSOC)) {
-                        $result[] = $row;
-                        $i++;
-                    }
-                    if ($single && ($i === 1)) {
-                        $result = $result[0];
-                    }
-                }
+        try {
+            $stmt = $this->connection->prepare($sql);
+            if ($stmt === false) {
+                $this->setError(self::ERROR_PREPARE . $this->connection->errno . ' ' . $this->connection->error . '. SQL: ' . $sql);
             } else {
-                $this->setError($stmt->errno . ' ' . $stmt->error . '. SQL: ' . $sql);
+                // if parameters have not arrived, then bind_param is not required
+                if (count($params) > 0) {
+                    call_user_func_array([$stmt, 'bind_param'], $param_arr);
+                }
+                if ($stmt->execute()) {
+                    $res = $stmt->get_result();
+                    if ($res !== false) {
+                        $result = [];
+                        $i = 0;
+                        while ($row = $res->fetch_array(MYSQLI_ASSOC)) {
+                            $result[] = $row;
+                            $i++;
+                        }
+                        if ($single && ($i === 1)) {
+                            $result = $result[0];
+                        }
+                    }
+                } else {
+                    $this->setError($stmt->errno . ' ' . $stmt->error . '. SQL: ' . $sql);
+                }
             }
+        } catch (Throwable $e) {
+            throw new AppException($e->getMessage());
         }
 
         if (!$this->isSuccess()) {
