@@ -30,17 +30,16 @@ class ContainerTest extends AbstractTestCase
     #[DataProvider('createDataProvider')]
     public function testContainerCreate(array $smtpConfig): void
     {
-        $container = new Container(self::PATH);
+        $container = $this->getContainer();
 
         $saveLog = false;
-        $logDir = self::PATH;
 
         self::assertEquals(
             new ConnectionPool($container),
             $container->getConnectionPool()
         );
         self::assertEquals(
-            new Logger($saveLog, $logDir),
+            new Logger($saveLog, $container->getRootDir()),
             $container->getLogger()
         );
         self::assertEquals(
@@ -50,10 +49,10 @@ class ContainerTest extends AbstractTestCase
         self::assertEquals(new Csrf($container), $container->getCsrf());
         self::assertEquals(new Captcha($container), $container->getCaptcha());
         self::assertEquals(new Validator($container), $container->getValidator());
-        self::assertEquals(self::PATH . 'cache/', $container->getCacheDir());
-        self::assertEquals(self::PATH . 'views/', $container->getViewDir());
-        self::assertEquals(self::PATH . 'migrations/', $container->getMigrationDir());
-        self::assertEquals(self::PATH . 'translations/', $container->getTranslateDir());
+        self::assertEquals($container->getRootDir() . 'cache/', $container->getCacheDir());
+        self::assertEquals($container->getRootDir() . 'views/', $container->getViewDir());
+        self::assertEquals($container->getRootDir() . 'migrations/', $container->getMigrationDir());
+        self::assertEquals($container->getRootDir() . 'translations/', $container->getTranslateDir());
         self::assertEquals('test', $container->getAppEnv());
     }
 
@@ -335,7 +334,7 @@ class ContainerTest extends AbstractTestCase
      */
     public function testContainerSetTemplate(): void
     {
-        $container = new Container(self::PATH);
+        $container = $this->getContainer();
 
         self::assertEquals('default', $container->getTemplate());
 

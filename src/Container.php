@@ -435,7 +435,7 @@ class Container
      */
     private function setEnv(string $path, string $file): void
     {
-        $dotenv = Dotenv::createImmutable($path, $file);
+        $dotenv = Dotenv::createMutable($path, $file);
         $dotenv->load();
         $this->env = $_ENV;
     }

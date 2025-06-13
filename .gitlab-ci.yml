@@ -32,4 +32,5 @@ unit tests:
   stage: tests
   script:
     - cp .env.example .env.test
+    - echo "APP_ENV=test" >> .env.test
     - APP_ENV=test php vendor/bin/phpunit
