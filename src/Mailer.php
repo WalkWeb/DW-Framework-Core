@@ -12,17 +12,19 @@ class Mailer
 {
     // TODO Доработать - если auth = false, то user и password не используются и не проверяются
 
-    public const ERROR_INVALID_HOST     = 'Incorrect parameter "smtp_host" it required and type string';
-    public const ERROR_INVALID_PORT     = 'Incorrect parameter "smtp_port" it required and type int';
-    public const ERROR_INVALID_AUTH     = 'Incorrect parameter "smtp_auth" it required and type bool';
-    public const ERROR_INVALID_USER     = 'Incorrect parameter "smtp_user" it required and type string';
-    public const ERROR_INVALID_PASSWORD = 'Incorrect parameter "smtp_password" it required and type string';
-    public const ERROR_INVALID_FROM     = 'Incorrect parameter "from" it required and type string';
+    public const string ERROR_INVALID_HOST     = 'Incorrect parameter "smtp_host" it required and type string';
+    public const string ERROR_INVALID_PORT     = 'Incorrect parameter "smtp_port" it required and type int';
+    public const string ERROR_INVALID_AUTH     = 'Incorrect parameter "smtp_auth" it required and type bool';
+    public const string ERROR_INVALID_USER     = 'Incorrect parameter "smtp_user" it required and type string';
+    public const string ERROR_INVALID_PASSWORD = 'Incorrect parameter "smtp_password" it required and type string';
+    public const string ERROR_INVALID_FROM     = 'Incorrect parameter "from" it required and type string';
 
     private Container $container;
     private PHPMailer $mail;
 
     /**
+     * TODO Remove $config - use $container->getEnv()
+     *
      * @param Container $container
      * @param array $config
      * @throws AppException
@@ -42,7 +44,7 @@ class Mailer
             $this->mail->Password = $config['smtp_password'];
             $this->mail->CharSet = 'UTF-8';
             $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-            $this->mail->isHTML(true);
+            $this->mail->isHTML();
             $this->mail->setFrom($config['from']);
         } catch (Exception $e) {
             throw new AppException($e->getMessage());

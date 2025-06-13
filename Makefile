@@ -21,3 +21,5 @@ cs:
 
 stan:
 	@$(DOCKER_COMP) exec php-8.4 php vendor/bin/phpstan analyse src
+
+test: phpunit cs stan

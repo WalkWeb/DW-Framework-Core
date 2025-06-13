@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Dotenv\Dotenv;
 use WalkWeb\NW\App;
 use WalkWeb\NW\AppException;
 use WalkWeb\NW\Container;

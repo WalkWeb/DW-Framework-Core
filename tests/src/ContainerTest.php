@@ -28,7 +28,7 @@ class ContainerTest extends AbstractTestCase
      * @throws AppException
      */
     #[DataProvider('createDataProvider')]
-    public function testContainerCreate(array $dbConfig, array $smtpConfig): void
+    public function testContainerCreate(array $smtpConfig): void
     {
         $container = new Container(self::PATH);
 
@@ -36,7 +36,7 @@ class ContainerTest extends AbstractTestCase
         $logDir = self::PATH;
 
         self::assertEquals(
-            new ConnectionPool($container, $dbConfig),
+            new ConnectionPool($container),
             $container->getConnectionPool()
         );
         self::assertEquals(
@@ -325,18 +325,9 @@ class ContainerTest extends AbstractTestCase
      */
     public function testContainerSetAppEnvFail(): void
     {
-        $_ENV['APP_ENV'] = 'invalid_app_env';
-
-        try {
-            $this->getContainer();
-        } catch (AppException $e) {
-            self::assertEquals(
-                'Invalid APP_ENV. Valid values: prod, dev, test',
-                $e->getMessage(),
-            );
-        }
-
-        $_ENV['APP_ENV'] = Container::APP_TEST;
+        $this->expectException(AppException::class);
+        $this->expectExceptionMessage('Invalid APP_ENV. Valid values: prod, dev, test');
+        $this->getContainer('invalid_app_env');
     }
 
     /**
@@ -394,14 +385,6 @@ class ContainerTest extends AbstractTestCase
     {
         return [
             [
-                [
-                    'default' => [
-                        'host'     => 'DB_HOST',
-                        'user'     => 'YOUR_DB_USER_NAME',
-                        'password' => 'YOUR_DB_PASSWORD',
-                        'database' => 'DATABASE_NAME',
-                    ],
-                ],
                 [
                     'smtp_host'     => 'HOST',
                     'smtp_port'     => 465,

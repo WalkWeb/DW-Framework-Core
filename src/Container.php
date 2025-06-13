@@ -48,7 +48,6 @@ class Container
     private string $appEnv;
     private string $rootDir;
     private string $secretKey;
-    private array $dbConfigs;
     private array $mailerConfig;
     private bool $loggerSaveLog;
     private string $loggerDir;
@@ -80,7 +79,6 @@ class Container
         $this->setAppEnv($appEnv ?: $this->getEnv('APP_ENV'));
         $this->rootDir = $rootDir;
         $this->secretKey = $this->getEnv('SECRET_KEY');
-        $this->dbConfigs = self::validateDbConfig($this->getEnv('DATABASE_URL'));
         $this->mailerConfig = self::validateSmtpConfig($this->getEnv('SMTP_URL'));
         $this->loggerSaveLog = (bool)$this->getEnv('SAVE_LOG');
         $this->loggerDir = $rootDir;
@@ -381,7 +379,7 @@ class Container
     private function createService(string $class): object
     {
         $service = match ($class) {
-            ConnectionPool::class => new ConnectionPool($this, $this->dbConfigs),
+            ConnectionPool::class => new ConnectionPool($this),
             Mailer::class => new Mailer($this, $this->mailerConfig),
             Logger::class => new Logger($this->loggerSaveLog, $this->loggerDir),
             Translation::class => new Translation($this, $this->language),
@@ -405,29 +403,6 @@ class Container
         }
 
         $this->appEnv = $appEnv;
-    }
-
-    /**
-     * @param string $url
-     * @return array[]
-     * @throws AppException
-     */
-    private static function validateDbConfig(string $url): array
-    {
-        $params = explode(':', $url);
-
-        if (count($params) !== 4) {
-            throw new AppException('Invalid database configuration: ' . $url);
-        }
-
-        return [
-            'default' => [
-                'user'     => $params[0],
-                'password' => $params[1],
-                'host'     => $params[2],
-                'database' => $params[3],
-            ],
-        ];
     }
 
     /**
