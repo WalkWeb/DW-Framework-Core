@@ -164,7 +164,7 @@ class LoaderImage
             throw new LoaderException(LoaderException::MAX_SIZE);
         }
 
-        if (!$this->container->getAppEnv() === Container::APP_TEST && !is_uploaded_file($filePath)) {
+        if ($this->container->getAppEnv() !== Container::APP_TEST && !is_uploaded_file($filePath)) {
             throw new LoaderException(LoaderException::NO_LOAD_TYPE);
         }
 
@@ -201,7 +201,7 @@ class LoaderImage
         $type = image_type_to_extension($image[2]);
         $newPath = $this->container->getRootDir() . $directory . $name . $type;
 
-        if (!$this->container->getAppEnv() === Container::APP_TEST && !move_uploaded_file($filePath, $newPath)) {
+        if ($this->container->getAppEnv() !== Container::APP_TEST && !move_uploaded_file($filePath, $newPath)) {
             throw new LoaderException(LoaderException::FAIL_UPLOAD);
         }
 
