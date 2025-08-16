@@ -10,6 +10,9 @@ COMPOSER = $(PHP_CONT) composer
 
 # ----------------------------------------------------------------------------------------------------------------------
 
+install:
+	@$(DOCKER_COMP) exec php-8.4 composer install
+
 phpunit:
 	@$(DOCKER_COMP) exec php-8.4 vendor/bin/phpunit --colors=auto
 
@@ -21,5 +24,8 @@ cs:
 
 stan:
 	@$(DOCKER_COMP) exec php-8.4 php vendor/bin/phpstan analyse src
+
+baseline:
+	@$(DOCKER_COMP) exec php-8.4 php vendor/bin/phpstan analyse src --generate-baseline
 
 test: phpunit cs stan

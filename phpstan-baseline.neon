@@ -1,5 +1,7 @@
 parameters:
-	ignoreErrors: []
-
-includes:
-	- phpstan-baseline.neon
+	ignoreErrors:
+		-
+			message: '#^Variable \$appEnv on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: src/AppException.php
